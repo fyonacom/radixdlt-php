@@ -15,16 +15,10 @@ namespace Techworker\RadixDLT\Crypto\Keys;
 
 use InvalidArgumentException;
 use Techworker\RadixDLT\Crypto\Keys\Curves\Secp256k1;
+use Techworker\RadixDLT\Radix;
 
-class CurveInfo
+class CurveResolver
 {
-    /**
-     * @var AbstractKeyPair[]
-     */
-    public const CURVES = [
-        Secp256k1::class
-    ];
-
     /**
      * Tries to determine a curve by the given public key length.
      *
@@ -34,7 +28,7 @@ class CurveInfo
      */
     public static function curveByPublicKeyLength(int $length): string
     {
-        foreach (self::CURVES as $curve) {
+        foreach (Radix::RADIX_CURVES as $curve) {
             if (in_array($length, $curve::getPublicKeyLengths(), true)) {
                 return $curve;
             }
@@ -54,7 +48,7 @@ class CurveInfo
      */
     public static function curveByPrivateKeyLength(int $length): string
     {
-        foreach (self::CURVES as $curve) {
+        foreach (Radix::RADIX_CURVES as $curve) {
             if (in_array($length, $curve::getPrivateKeyLengths(), true)) {
                 return $curve;
             }
@@ -62,6 +56,18 @@ class CurveInfo
 
         throw new InvalidArgumentException(
             'Unable to identify a curve with private key length: ' . $length
+        );
+    }
+
+    public static function curveByName(string $name) : string {
+        foreach (Radix::RADIX_CURVES as $curve) {
+            if ($curve::getName() === $name) {
+                return $curve;
+            }
+        }
+
+        throw new InvalidArgumentException(
+            'Unable to identify a curve with name: ' . $name
         );
     }
 }

@@ -10,7 +10,7 @@ function radixHash(array $data, int $offset = 0, int $length = 0) : array {
         $data = array_slice($data, $offset, $length);
     }
 
-    $last = bytesToString($data);
+    $last = bytesToBin($data);
     for($i = 0; $i < Radix::RADIX_HASH_ROUNDS; $i++) {
         $context = hash_init(Radix::RADIX_HASH_ALG);
         hash_update($context, $last);
@@ -40,10 +40,10 @@ function encToBytes(string $string, ?string $enc = 'hex') : array {
 
 function bytesToEnc(array $bytes, ?string $enc = 'hex') : string|array {
     return match ($enc) {
-        'array' => $bytes,
+        'bytes' => $bytes,
         'hex' => bytesToHex($bytes),
         'base58' => bytesToBs58($bytes),
-        default => bytesToString($bytes),
+        default => bytesToBin($bytes),
     };
 }
 
@@ -64,14 +64,14 @@ function stringToHex(string $string) : string {
  * @return string
  */
 function bytesToHex(array $bytes) : string {
-    return stringToHex(bytesToString($bytes));
+    return stringToHex(bytesToBin($bytes));
 }
 
 /**
  * @param array $bytes
  * @return string
  */
-function bytesToString(array $bytes) : string {
+function bytesToBin(array $bytes) : string {
     return pack("C*", ...$bytes);
 }
 
@@ -106,7 +106,7 @@ function bs58ToBytes(string $bs58) {
 }
 
 function bytesToBs58(array $bytes) : string {
-    return bs58()->encode(bytesToString($bytes));
+    return bs58()->encode(bytesToBin($bytes));
 }
 
 function uInt32ToBytes(int $value) : array {

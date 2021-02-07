@@ -14,54 +14,34 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT\Primitives;
 
 use InvalidArgumentException;
+use Techworker\RadixDLT\Crypto\Keys\AbstractKeyPair;
 
 /**
  * Class RadixHash
  *
  * @package Techworker\RadixDLT
  */
-class RadixHash implements \Stringable, \JsonSerializable
+class RadixHash extends AbstractPrimitive
 {
-    /**
-     * Bytes of the UID.
-     *
-     * @var array
-     */
-    protected array $bytes;
-
     /**
      * RadixUID constructor.
      *
-     * @param string|array $data
+     * @param array $bytes
      */
-    public function __construct(string|array $data, string $enc = 'hex')
+    public function __construct(array $bytes)
     {
-        $this->bytes = [];
+        if(count($bytes) !== 64) {
+            throw new InvalidArgumentException('A hash must be 64 bytes long.');
+        }
+
+        parent::__construct($bytes);
+    }
+
+    public static function from(string|array $data, string $enc = null) {
         if(is_string($data)) {
             $this->bytes = encToBytes($data, $enc);
         } elseif(is_array($data)) {
             $this->bytes = $data;
-        }
-
-        if(count($this->bytes) !== 64) {
-            throw new InvalidArgumentException('A hash must be 64 bytes long.');
-        }
-    }
-
-    /**
-     * Gets a value indicating whether the given UID equals the current.
-     *
-     * @param RadixHash|string|array $hash
-     * @param string $enc
-     * @return bool
-     */
-    public function equals(RadixHash|string|array $hash, string $enc = 'hex') {
-        if($hash instanceof RadixHash) {
-            return $hash->toString('hex') === $this->toString('hex');
-        } elseif(is_string($hash)) {
-            return $hash === $this->toString($enc);
-        } elseif (is_array($hash)) {
-            return bytesToHex($hash) === $this->toString();
         }
     }
 
@@ -71,7 +51,7 @@ class RadixHash implements \Stringable, \JsonSerializable
      */
     public function to(string $enc = 'hex') {
         return match ($enc) {
-            'array' => $this->bytes,
+            'bytes' => $this->bytes,
             'json' => ':uid:' . $this->to('hex'),
             default => bytesToEnc($enc),
         };

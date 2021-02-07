@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Crypto\Keys;
 
+use Techworker\RadixDLT\Serialization\Attributes\DefaultEncoding;
+
 /**
  * Interface CurveInterface
  * @package Techworker\RadixDLT\Crypto

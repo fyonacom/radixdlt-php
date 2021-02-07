@@ -7,18 +7,24 @@ use Techworker\RadixDLT\Crypto\Keys\Curves\Secp256k1;
 use Techworker\RadixDLT\Crypto\Keys\PrivateKey;
 use Techworker\RadixDLT\Crypto\Keys\PublicKey;
 use Techworker\RadixDLT\Primitives\RadixAddress;
+use function Techworker\RadixDLT\bs58ToBytes;
+use function Techworker\RadixDLT\bytesToHex;
+use function Techworker\RadixDLT\bytesToBin;
+use function Techworker\RadixDLT\encToBytes;
 use function Techworker\RadixDLT\hexToBytes;
 use function Techworker\RadixDLT\stringToHex;
 
 class RadixAddressTest extends TestCase
 {
-    public function fixtureProvider() {
-        //return array_slice(json_decode(file_get_contents(__DIR__ . '/fixtures/RadixAddress.json'), true), 0, 1);
-        return json_decode(file_get_contents(__DIR__ . '/fixtures/RadixAddress.json'), true);
+    public function fixtureProvider()
+    {
+        return array_slice(json_decode(file_get_contents(__DIR__ . '/fixtures/RadixAddress.json'), true), 0, 1);
+        //return json_decode(file_get_contents(__DIR__ . '/fixtures/RadixAddress.json'), true);
     }
 
     /**
      * @dataProvider fixtureProvider
+     * @param string $keyType
      * @param string $publicKey
      * @param string $privateKey
      * @param string $base58
@@ -29,48 +35,53 @@ class RadixAddressTest extends TestCase
      * @param string $json
      * @param string $dson
      * @param int $universe
-     * @throws \Exception
+     * @throws \ReflectionException
      */
-    public function testFromBase58(string $publicKey,
-                                    string $privateKey,
-                                    string $base58,
-                                    array $bytes,
-                                    string $hash,
-                                    string $shard,
-                                    string $uid,
-                                    string $json,
-                                    string $dson,
-                                    int $universe) {
-        $radixAddress = RadixAddress::from($base58);
+    public function testFromBase58(
+        string $keyType,
+        string $publicKey,
+        string $privateKey,
+        string $base58,
+        array $bytes,
+        string $hash,
+        string $shard,
+        string $uid,
+        string $json,
+        string $dson,
+        int $universe)
+    {
+        $radixAddress = RadixAddress::from($base58, 'base58');
         $this->assertRadixAddress(
-            $radixAddress, $publicKey, null, $base58, $bytes,
+            $radixAddress, $keyType, $publicKey, null, $base58, $bytes,
             $hash, $shard, $uid, $json, $dson, $universe
         );
     }
 
     /**
      * @dataProvider fixtureProvider
+     * @param string $keyType
      * @param string $publicKey
      * @param string $privateKey
-     * @param string $address
-     * @param array $addressBytes
+     * @param string $base58
+     * @param array $bytes
      * @param string $hash
      * @param string $shard
      * @param string $uid
      * @param string $json
      * @param string $dson
-     * @param int $magicByte
+     * @param int $universe
      */
-    public function testFromPublicKey(string $publicKey,
-                                   string $privateKey,
-                                   string $base58,
-                                   array $bytes,
-                                   string $hash,
-                                   string $shard,
-                                   string $uid,
-                                   string $json,
-                                   string $dson,
-                                   int $universe) {
+    public function testFromPublicKey(string $keyType, string $publicKey,
+                                      string $privateKey,
+                                      string $base58,
+                                      array $bytes,
+                                      string $hash,
+                                      string $shard,
+                                      string $uid,
+                                      string $json,
+                                      string $dson,
+                                      int $universe)
+    {
 
         $publicKey = new PublicKey(Secp256k1::class, hexToBytes($publicKey));
 
@@ -82,9 +93,9 @@ class RadixAddressTest extends TestCase
         ];
 
         // loop and check
-        foreach($addresses as $radixAddress) {
+        foreach ($addresses as $radixAddress) {
             $this->assertRadixAddress(
-                $radixAddress, $publicKey, null, $base58, $bytes,
+                $radixAddress, $keyType, $publicKey, null, $base58, $bytes,
                 $hash, $shard, $uid, $json, $dson, $universe
             );
         }
@@ -92,6 +103,7 @@ class RadixAddressTest extends TestCase
 
     /**
      * @dataProvider fixtureProvider
+     * @param string $keyType
      * @param string $publicKey
      * @param string $privateKey
      * @param string $base58
@@ -103,16 +115,17 @@ class RadixAddressTest extends TestCase
      * @param string $dson
      * @param int $universe
      */
-    public function testFromPrivate(string $publicKey,
-                                   string $privateKey,
-                                   string $base58,
-                                   array $bytes,
-                                   string $hash,
-                                   string $shard,
-                                   string $uid,
-                                   string $json,
-                                   string $dson,
-                                   int $universe) {
+    public function testFromPrivate(string $keyType, string $publicKey,
+                                    string $privateKey,
+                                    string $base58,
+                                    array $bytes,
+                                    string $hash,
+                                    string $shard,
+                                    string $uid,
+                                    string $json,
+                                    string $dson,
+                                    int $universe)
+    {
 
         $privateKey = new PrivateKey(Secp256k1::class, hexToBytes($privateKey));
 
@@ -123,9 +136,51 @@ class RadixAddressTest extends TestCase
             RadixAddress::fromPrivateKey($privateKey, null, $universe)
         ];
 
-        foreach($addresses as $radixAddress) {
+        foreach ($addresses as $radixAddress) {
             $this->assertRadixAddress(
-                $radixAddress, $publicKey, $privateKey, $base58, $bytes,
+                $radixAddress, $keyType, $publicKey, $privateKey, $base58, $bytes,
+                $hash, $shard, $uid, $json, $dson, $universe
+            );
+        }
+    }
+
+    /**
+     * @dataProvider fixtureProvider
+     * @param string $keyType
+     * @param string $publicKey
+     * @param string $privateKey
+     * @param string $base58
+     * @param array $bytes
+     * @param string $hash
+     * @param string $shard
+     * @param string $uid
+     * @param string $json
+     * @param string $dson
+     * @param int $universe
+     */
+    public function testFrom(string $keyType, string $publicKey,
+                                    string $privateKey,
+                                    string $base58,
+                                    array $bytes,
+                                    string $hash,
+                                    string $shard,
+                                    string $uid,
+                                    string $json,
+                                    string $dson,
+                                    int $universe)
+    {
+
+        // create from public key array and public key hex
+        $addresses = [
+            RadixAddress::from($base58, 'base58'),
+            RadixAddress::from(bytesToHex($bytes), 'hex'),
+            RadixAddress::from(bytesToBin($bytes), 'bin'),
+            RadixAddress::from($bytes), // array
+        ];
+
+        foreach ($addresses as $radixAddress) {
+            $this->assertRadixAddress(
+                $radixAddress, $keyType, $publicKey, null, $base58, $bytes,
                 $hash, $shard, $uid, $json, $dson, $universe
             );
         }
@@ -133,16 +188,17 @@ class RadixAddressTest extends TestCase
 
     private function assertRadixAddress(
         RadixAddress $radixAddress,
+        string $keyType,
         string $publicKey,
-                                        ?string $privateKey,
-                                        string $base58,
-                                        array $bytes,
-                                        string $hash,
-                                        string $shard,
-                                        string $uid,
-                                        string $json,
-                                        string $dson,
-                                        int $universe)
+        ?string $privateKey,
+        string $base58,
+        array $bytes,
+        string $hash,
+        string $shard,
+        string $uid,
+        string $json,
+        string $dson,
+        int $universe)
     {
         $this->assertEquals($publicKey, $radixAddress->getPublicKey()->to('hex'));
         $this->assertEquals($privateKey, $radixAddress->getPrivateKey()?->to('hex'));

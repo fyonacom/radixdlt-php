@@ -50,7 +50,7 @@ class PrivateKey
             $length = count(encToBytes($data, $enc));
         }
 
-        $curve = CurveInfo::curveByPrivateKeyLength($length);
+        $curve = CurveResolver::curveByPrivateKeyLength($length);
         return new PrivateKey($curve, $data, $enc);
     }
 
@@ -61,7 +61,7 @@ class PrivateKey
     public function to(string $enc = 'hex'): string|array
     {
         return match ($enc) {
-            'array', 'bytes' => $this->bytes,
+            'bytes' => $this->bytes,
             default => bytesToEnc($this->bytes, $enc),
         };
     }

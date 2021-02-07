@@ -18,7 +18,6 @@ use Techworker\RadixDLT\Serialization\Attributes\CBOR;
 use Techworker\RadixDLT\Serialization\Attributes\DefaultEncoding;
 use Techworker\RadixDLT\Serialization\Attributes\JsonPrefix;
 use function Techworker\RadixDLT\bytesToEnc;
-use function Techworker\RadixDLT\bytesToHex;
 use function Techworker\RadixDLT\encToBytes;
 use function Techworker\RadixDLT\writeUInt32BE;
 
@@ -41,25 +40,14 @@ class RadixUID extends AbstractPrimitive
 
     /**
      * RadixUID constructor.
-     *
-     * @param int|string|array $value
-     * @param string|null $enc
+     * @param array $bytes
      */
-    public function __construct(int|string|array $value, ?string $enc = 'hex')
+    public function __construct(array $bytes)
     {
-        if(is_int($value)) {
-            $bytes = array_fill(0, 16, 0);
-            writeUInt32BE($bytes, $value, 12);
-        } elseif(is_string($value)) {
-            $bytes = encToBytes($value, $enc);
-        } else {
-            $bytes = $value;
-        }
-
         $this->shard = array_slice($bytes, 0, 8);
-
         parent::__construct($bytes);
     }
+
 
     /**
      * Gets the shard.
@@ -67,28 +55,25 @@ class RadixUID extends AbstractPrimitive
      * @param string $enc
      * @return array|string
      */
-    public function getShard(string $enc = 'array') : array|string {
-        if($enc !== 'array') {
+    public function getShard(string $enc = 'bytes') : array|string {
+        if($enc !== 'bytes') {
             return bytesToEnc($this->shard, $enc);
         }
 
         return $this->shard;
     }
 
-    /**
-     * Gets a value indicating whether the given UID equals the current.
-     *
-     * @param RadixUID|string|array $uid
-     * @return bool
-     */
-    public function equals(RadixUID|string|array $uid) {
-        if($uid instanceof RadixUID) {
-            return (string)$uid === (string)$this;
-        } elseif(is_string($uid)) {
-            return $uid === (string)$this;
-        } elseif (is_array($uid)) {
-            return bytesToHex($uid) === (string)$this;
+    public static function from(int|string|array $data, ?string $enc = 'hex')
+    {
+        $bytes = $data;
+        if(is_int($data)) {
+            $bytes = array_fill(0, 16, 0);
+            writeUInt32BE($bytes, $data, 12);
+        } elseif(is_string($data)) {
+            $bytes = encToBytes($data, $enc);
         }
+
+        return new self($bytes);
     }
 
     /**
@@ -98,6 +83,6 @@ class RadixUID extends AbstractPrimitive
      */
     public function __toString() : string
     {
-        return $this->to('hex');
+        return $this->to();
     }
 }
