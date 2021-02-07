@@ -1,0 +1,15 @@
+version: '3'
+services:
+  php:
+    build: ./
+    volumes:
+      - ./../:/srv
+    environment:
+      HOST_USER_UID: ${HOST_USER_UID}
+      HOST_USER_GID: ${HOST_USER_GID}
+      HOST_USER_NAME: ${HOST_USER_NAME}
+      XDEBUG_CONFIG: "idekey=radixdlt-php"
+      PHP_IDE_CONFIG: "serverName=radixdlt-php-dev"
+    extra_hosts:
+      - "dockerhost:${DOCKER_HOST_IP}"
+    working_dir: /srv

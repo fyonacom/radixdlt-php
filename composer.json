@@ -1,0 +1,24 @@
+{
+    "name": "ben/php",
+    "authors": [
+        {
+            "name": "Benjamin Ansbach",
+            "email": "benjamin.ansbach@zandura.net"
+        }
+    ],
+    "require": {
+        "simplito/elliptic-php": "^1.0",
+        "tuupola/base58": "^2.1",
+        "phpunit/phpunit": "^9.5",
+        "spomky-labs/cbor-php": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Techworker\\RadixDLT\\": "src/",
+            "Techworker\\RadixDLT\\Tests\\": "tests/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    }
+}
