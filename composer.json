@@ -20,5 +20,8 @@
         "files": [
             "src/helpers.php"
         ]
+    },
+    "require-dev": {
+        "vimeo/psalm": "^4.4"
     }
 }

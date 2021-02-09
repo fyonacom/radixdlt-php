@@ -14,14 +14,18 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT\Serialization\Attributes;
 
 use Attribute;
-use ReflectionClass;
-use ReflectionException;
 use Techworker\RadixDLT\Serialization\AbstractAttribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class JsonPrefix extends AbstractAttribute
+class Encoding extends AbstractAttribute
 {
-    public function __construct(private string $prefix)
+    public function __construct(protected string $encoding,
+                                protected array $supported = [
+                                    'bytes', 'bin', 'json', 'cbor', 'hex', 'base58', 'base64'
+                                ],
+                                protected array $notSupported = [
+
+                                ])
     {
     }
 }

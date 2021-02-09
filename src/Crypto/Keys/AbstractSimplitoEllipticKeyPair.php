@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT\Crypto\Keys;
 
 use BN\BN;
+use Elliptic\EC\KeyPair;
 use function Techworker\RadixDLT\ec;
 use function Techworker\RadixDLT\encToBytes;
 
@@ -29,6 +30,7 @@ abstract class AbstractSimplitoEllipticKeyPair extends AbstractKeyPair
      */
     public static function generateNew(): static
     {
+        /** @var KeyPair */
         $libKeyPair = ec(static::getName())->genKeyPair();
         return self::libKeyPairToKeyPair($libKeyPair);
     }
@@ -36,21 +38,23 @@ abstract class AbstractSimplitoEllipticKeyPair extends AbstractKeyPair
     /**
      * Helper function that can convert a simplito keypair to our keypair.
      *
-     * @param \Elliptic\EC\KeyPair $kp
+     * @param KeyPair $kp
      * @return static
      */
-    protected static function libKeyPairToKeyPair(\Elliptic\EC\KeyPair $kp): static
+    protected static function libKeyPairToKeyPair(KeyPair $kp): static
     {
         // TODO: send an array
         /** @var string $libPublicKey */
         $libPublicKey = $kp->getPublic(true, 'hex');
-        $publicKey = new PublicKey(static::class, $libPublicKey, 'hex');
+        $publicKey = PublicKey::fromHex($libPublicKey);
 
-        /** @var BN $libPrivateKey */
         $privateKey = null;
-        if($kp->getPrivate() !== null) {
-            $libPrivateKey = $kp->getPrivate()->toString(16, 2);
-            $privateKey = new PrivateKey(static::class, $libPrivateKey, 'hex');
+        /** @var BN|null $ecPrivateKey */
+        $ecPrivateKey = $kp->getPrivate();
+        if($ecPrivateKey !== null) {
+            /** @var string $libPrivateKey */
+            $libPrivateKey = $ecPrivateKey->toString(16, 2);
+            $privateKey = PrivateKey::fromHex($libPrivateKey);
         }
 
         return new static($publicKey, $privateKey);
@@ -66,10 +70,11 @@ abstract class AbstractSimplitoEllipticKeyPair extends AbstractKeyPair
             $bytes = encToBytes($publicKey, $enc);
         } elseif (is_array($publicKey)) {
             $bytes = $publicKey;
-        } elseif ($publicKey instanceof PublicKey) {
-            $bytes = $publicKey->to('bytes');
+        } else {
+            $bytes = $publicKey->toBytes();
         }
 
+        /** @var KeyPair $libKeyPair */
         $libKeyPair = ec(static::getName())->keyFromPublic($bytes);
         return self::libKeyPairToKeyPair($libKeyPair);
     }
@@ -84,10 +89,11 @@ abstract class AbstractSimplitoEllipticKeyPair extends AbstractKeyPair
             $bytes = encToBytes($privateKey, $enc);
         } elseif (is_array($privateKey)) {
             $bytes = $privateKey;
-        } elseif ($privateKey instanceof PrivateKey) {
-            $bytes = $privateKey->to('bytes');
+        } else {
+            $bytes = $privateKey->toBytes();
         }
 
+        /** @var KeyPair $libKeyPair */
         $libKeyPair = ec(static::getName())->keyFromPrivate($bytes);
         return self::libKeyPairToKeyPair($libKeyPair);
     }

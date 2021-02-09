@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT\Crypto\Keys;
 
 use InvalidArgumentException;
-use Techworker\RadixDLT\Crypto\Keys\Curves\Secp256k1;
 use Techworker\RadixDLT\Radix;
 
 class CurveResolver

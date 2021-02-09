@@ -18,7 +18,7 @@ use Techworker\RadixDLT\Serialization\Attributes\Curve;
 /**
  * Class KeyPair
  *
- * @package Techworker\RadixDLT\Crypto
+ * @psalm-consistent-constructor
  */
 abstract class AbstractKeyPair implements CurveInterface
 {
@@ -38,7 +38,7 @@ abstract class AbstractKeyPair implements CurveInterface
      * @return string
      */
     public static function getName() : string {
-        return Curve::getParam('name', static::class);
+        return (string)Curve::getParam('name', static::class);
     }
 
     /**
@@ -47,7 +47,7 @@ abstract class AbstractKeyPair implements CurveInterface
      * @return array
      */
     public static function getPrivateKeyLengths() : array {
-        return Curve::getParam('privateKeyLengths', static::class);
+        return (array)Curve::getParam('privateKeyLengths', static::class);
     }
 
     /**
@@ -56,7 +56,7 @@ abstract class AbstractKeyPair implements CurveInterface
      * @return array
      */
     public static function getPublicKeyLengths() : array {
-        return Curve::getParam('publicKeyLengths', static::class);
+        return (array)Curve::getParam('publicKeyLengths', static::class);
     }
 
     /**

@@ -21,9 +21,9 @@ use Techworker\RadixDLT\Serialization\AbstractAttribute;
 #[Attribute(Attribute::TARGET_CLASS)]
 class Curve extends AbstractAttribute
 {
-    public function __construct(private string $name,
-                                private array $privateKeyLengths,
-                                private array $publicKeyLengths)
+    public function __construct(protected string $name,
+                                protected array $privateKeyLengths,
+                                protected array $publicKeyLengths)
     {
     }
 }

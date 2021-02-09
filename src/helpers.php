@@ -1,49 +1,85 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the RADIXDLT PHP package.
+ *
+ * (c) Copyright >=2020 Benjamin Ansbach & fyona.com <ben@fyona.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Techworker\RadixDLT;
 
 use Elliptic\EC;
+use Techworker\RadixDLT\Crypto\Keys\Curves\Secp256k1;
 use Tuupola\Base58;
 
+/**
+ * @param array $data
+ * @param int $offset
+ * @param int $length
+ * @return int[]
+ */
 function radixHash(array $data, int $offset = 0, int $length = 0) : array {
     if ($offset !== 0) {
         $data = array_slice($data, $offset, $length);
     }
 
-    $last = bytesToBin($data);
+    $last = bytesToBinary($data);
     for($i = 0; $i < Radix::RADIX_HASH_ROUNDS; $i++) {
         $context = hash_init(Radix::RADIX_HASH_ALG);
         hash_update($context, $last);
         $last = hash_final($context, true);
     }
 
-    return stringToBytes($last);
+    return binaryToBytes($last);
 }
 
-// temp
-function ec(string $keyType = CurveInfo::SECP256K1) : EC {
+/**
+ * temp
+ * @param string $keyType
+ * @return EC
+ */
+function ec(string $keyType = Secp256k1::class) : EC {
     return new EC($keyType);
 }
 
-// temp
+/**
+ * temp
+ * @return Base58
+ */
 function bs58() : Base58 {
     return new Base58(["characters" => Base58::BITCOIN]);
 }
 
+/**
+ * @param string $string
+ * @param string|null $enc
+ * @return int[]
+ */
 function encToBytes(string $string, ?string $enc = 'hex') : array {
     return match ($enc) {
         'hex' => hexToBytes($string),
-        'base58' => bs58ToBytes($string),
-        default => stringToBytes($string),
+        'base58' => base58ToBytes($string),
+        default => binaryToBytes($string),
     };
 }
 
+/**
+ * @param int[] $bytes
+ * @param string|null $enc
+ * @return string|int[]
+ */
 function bytesToEnc(array $bytes, ?string $enc = 'hex') : string|array {
     return match ($enc) {
         'bytes' => $bytes,
         'hex' => bytesToHex($bytes),
-        'base58' => bytesToBs58($bytes),
-        default => bytesToBin($bytes),
+        'base58' => bytesToBase58($bytes),
+        'base64' => bytesToBase64($bytes),
+        default => bytesToBinary($bytes),
     };
 }
 
@@ -54,6 +90,7 @@ function bytesToEnc(array $bytes, ?string $enc = 'hex') : string|array {
  * @return string
  */
 function stringToHex(string $string) : string {
+    /** @var string */
     return unpack('H*', $string)[1];
 }
 
@@ -64,32 +101,49 @@ function stringToHex(string $string) : string {
  * @return string
  */
 function bytesToHex(array $bytes) : string {
-    return stringToHex(bytesToBin($bytes));
+    return stringToHex(bytesToBinary($bytes));
 }
 
 /**
  * @param array $bytes
  * @return string
  */
-function bytesToBin(array $bytes) : string {
+function bytesToBinary(array $bytes) : string {
     return pack("C*", ...$bytes);
+}
+
+/**
+ * @param array $bytes
+ * @return string
+ */
+function bytesToBase64(array $bytes) : string {
+    return base64_encode(bytesToBinary($bytes));
+}
+
+/**
+ * @param string $base64
+ * @return int[]
+ */
+function base64ToBytes(string $base64) : array {
+    return binaryToBytes(base64_decode($base64));
 }
 
 /**
  *
  * @param string $string
- * @return array
+ * @return int[]
  */
-function stringToBytes(string $string) : array {
+function binaryToBytes(string $string) : array {
+    /** @var int[] */
     return array_values(unpack('C*', $string));
 }
 
 /**
  * @param string $hex
- * @return array
+ * @return int[]
  */
 function hexToBytes(string $hex) : array {
-    return stringToBytes(hexToString($hex));
+    return binaryToBytes(hexToString($hex));
 }
 
 
@@ -101,31 +155,53 @@ function hexToString(string $hex) : string {
     return pack('H*', $hex);
 }
 
-function bs58ToBytes(string $bs58) {
-    return stringToBytes(bs58()->decode($bs58));
+/**
+ * @param string $bs58
+ * @return int[]
+ */
+function base58ToBytes(string $bs58) : array {
+    return binaryToBytes(bs58()->decode($bs58));
 }
 
-function bytesToBs58(array $bytes) : string {
-    return bs58()->encode(bytesToBin($bytes));
+/**
+ * @param int[] $bytes
+ * @return string
+ */
+function bytesToBase58(array $bytes) : string {
+    return bs58()->encode(bytesToBinary($bytes));
 }
 
+/**
+ * @param int $value
+ * @return int[]
+ */
 function uInt32ToBytes(int $value) : array {
-    return stringToBytes(pack('N*', $value));
+    return binaryToBytes(pack('N*', $value));
 }
 
+/**
+ * @param int[] $targetBytes
+ * @param int[] $writeBytes
+ * @param int $offset
+ * @return int
+ */
 function writeBytes(array &$targetBytes, array $writeBytes, int $offset = 0) : int{
     $length = count($writeBytes);
-    array_splice($target, $offset, $length, $writeBytes);
+    array_splice($targetBytes, $offset, $length, $writeBytes);
     $offset += $length;
     return $offset;
 }
 
+/**
+ * @param int[] $target
+ * @param int $value
+ * @param int $offset
+ * @return int
+ */
 function writeUInt32BE(array &$target, int $value, int $offset = 0) : int {
     return writeBytes($target, uInt32ToBytes($value), $offset);
 }
 
-function readInt64BE(array $source, int $offset = 0) {
-    list(, $hihi, $hilo, $lohi, $lolo) = unpack('n*', array_slice($source, $offset, 8));
-    return ($hihi * (0xffff+1) + $hilo) * (0xffffffff+1) +
-        ($lohi * (0xffff+1) + $lolo);
+function mapJsonToTypes(array $json) {
+
 }

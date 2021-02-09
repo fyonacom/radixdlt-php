@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Crypto\Keys;
 
-use Techworker\RadixDLT\Serialization\Attributes\DefaultEncoding;
+use Techworker\RadixDLT\Serialization\Attributes\Encoding;
 
 /**
  * Interface CurveInterface
@@ -32,7 +32,7 @@ interface CurveInterface
      * Returns a new keypair based on the given public key.
      *
      * @param string|array|PublicKey $publicKey
-     * @param string $enc
+     * @param string|null $enc
      * @return static
      */
     public static function fromPublicKey(string|array|PublicKey $publicKey, ?string $enc = 'hex'): static;
@@ -41,7 +41,7 @@ interface CurveInterface
      * Returns a new keypair based on the given private key.
      *
      * @param string|array|PrivateKey $privateKey
-     * @param string $enc
+     * @param string|null $enc
      * @return static
      */
     public static function fromPrivateKey(string|array|PrivateKey $privateKey, ?string $enc = 'hex'): static;

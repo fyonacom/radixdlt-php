@@ -13,23 +13,24 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Serialization;
 
-use Attribute;
 use ReflectionClass;
-use ReflectionException;
 use Throwable;
 
 abstract class AbstractAttribute
 {
     /**
-     * Gets an attribute value
+     * Gets an attribute value.
      *
+     * @param string $name
      * @param $classOrInstance
-     * @return string|null
-     * @throws ReflectionException
+     * @param mixed $default
+     * @return mixed
      */
-    public static function getParam(string $name, $classOrInstance) : mixed {
+    public static function getParam(string $name, string|object $classOrInstance, mixed $default = null) : mixed {
+        /** @var mixed[] $values */
         static $values = [];
 
+        /** @var class-string $class */
         $class = $classOrInstance;
         if(!is_string($classOrInstance)) {
             $class = $classOrInstance::class;
@@ -37,11 +38,24 @@ abstract class AbstractAttribute
 
         $acc = $class . '::' . $name;
         if(!isset($values[$acc])) {
-            $reflection = new ReflectionClass($classOrInstance);
+            try {
+                $reflection = new ReflectionClass($class);
+            }
+            catch(Throwable) {
+                return null;
+            }
 
             $attributes = $reflection->getAttributes(static::class);
             foreach ($attributes as $attribute) {
-                $values[$acc] = $attribute->getArguments()[$name];
+                if(!isset($attribute->getArguments()[$name])) {
+                    // argument not given in attribute usage, so we will try
+                    // and fetch the property from the attribute instance
+                    $instance = $attribute->newInstance();
+                    /** @var mixed */
+                    $values[$acc] = $instance->{$name};
+                } else {
+                    $values[$acc] = $attribute->getArguments()[$name];
+                }
                 break;
             }
         }

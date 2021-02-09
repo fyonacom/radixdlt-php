@@ -21,7 +21,7 @@ use Techworker\RadixDLT\Serialization\AbstractAttribute;
 #[Attribute(Attribute::TARGET_CLASS)]
 class CBOR extends AbstractAttribute
 {
-    public function __construct(private int $prefix, private string $target)
+    public function __construct(protected int $prefix, protected string $target)
     {
     }
 }

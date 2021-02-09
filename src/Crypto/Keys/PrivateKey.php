@@ -13,61 +13,35 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Crypto\Keys;
 
-use function Techworker\RadixDLT\bytesToEnc;
-use function Techworker\RadixDLT\encToBytes;
+use Techworker\RadixDLT\Serialization\Attributes\Encoding;
+use Techworker\RadixDLT\Types\BytesBased;
 
 /**
  * Class PrivateKey
  *
  * @package Techworker\RadixDLT\Crypto
  */
-class PrivateKey
+#[Encoding(encoding: 'hex', notSupported: ['json', 'cbor'])]
+class PrivateKey extends BytesBased
 {
-    protected array $bytes;
+    protected string $curve;
 
     /**
      * PrivateKey constructor.
-     * @param string $curve
-     * @param array|string $data
-     * @param string $enc
+     * @param int[] $bytes
      */
-    public function __construct(protected string $curve, array|string $data, string $enc = 'hex')
+    protected function __construct(array $bytes)
     {
-        if (is_string($data)) {
-            $this->bytes = encToBytes($data, $enc);
-        } elseif (is_array($data)) {
-            $this->bytes = $data;
-        }
-
-        // TODO: length check
+        parent::__construct($bytes);
+        $this->curve = CurveResolver::curveByPrivateKeyLength(count($this->bytes));
     }
 
-    public static function from(array|string $data, string $enc = 'hex') : PrivateKey {
-        $length = 0;
-        if(is_array($data)) {
-            $length = count($data);
-        } elseif (is_string($data)) {
-            $length = count(encToBytes($data, $enc));
-        }
-
-        $curve = CurveResolver::curveByPrivateKeyLength($length);
-        return new PrivateKey($curve, $data, $enc);
-    }
-
+    /**
+     * Gets the class of the curve.
+     *
+     * @return string
+     */
     public function getCurve() : string {
         return $this->curve;
-    }
-
-    public function to(string $enc = 'hex'): string|array
-    {
-        return match ($enc) {
-            'bytes' => $this->bytes,
-            default => bytesToEnc($this->bytes, $enc),
-        };
-    }
-
-    public function __toString(): string
-    {
-        return $this->to('hex');
     }
 }

@@ -20,8 +20,10 @@ use Techworker\RadixDLT\Serialization\Attributes\Curve;
  * Class Secp256k1
  *
  * A Secp256k1 key pair using the AbstractSimplitoEllipticPHPKeyPair library.
+ *
+ * A secp256k1 key can be < 32 bytes, see https://stackoverflow.com/questions/62938091/why-are-secp256k1-privatekeys-not-always-32-bytes-in-nodejs
  */
-#[Curve(name: 'secp256k1', privateKeyLengths: [32], publicKeyLengths: [33])]
+#[Curve(name: 'secp256k1', privateKeyLengths: [29,30,31,32], publicKeyLengths: [33])]
 class Secp256k1 extends AbstractSimplitoEllipticKeyPair
 {
 }

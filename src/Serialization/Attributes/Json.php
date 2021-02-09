@@ -17,9 +17,9 @@ use Attribute;
 use Techworker\RadixDLT\Serialization\AbstractAttribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class DefaultEncoding extends AbstractAttribute
+class Json extends AbstractAttribute
 {
-    public function __construct(private string $encoding)
+    public function __construct(protected string $prefix, protected string $encoding)
     {
     }
 }

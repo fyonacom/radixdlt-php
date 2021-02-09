@@ -13,52 +13,35 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Crypto\Keys;
 
-use function Techworker\RadixDLT\bytesToEnc;
-use function Techworker\RadixDLT\encToBytes;
+use Techworker\RadixDLT\Serialization\Attributes\Encoding;
+use Techworker\RadixDLT\Types\BytesBased;
 
-class PublicKey
+/**
+ * Class PublicKey
+ *
+ * @package Techworker\RadixDLT\Crypto
+ */
+#[Encoding(encoding: 'hex', notSupported: ['json', 'cbor'])]
+class PublicKey extends BytesBased
 {
-    protected array $bytes;
+    protected string $curve;
 
-    public function __construct(protected string $curve,
-                                array|string $data,
-                                string $enc = 'hex')
+    /**
+     * PrivateKey constructor.
+     * @param int[] $bytes
+     */
+    protected function __construct(array $bytes)
     {
-        if(is_string($data)) {
-            $this->bytes = encToBytes($data, $enc);
-        } elseif(is_array($data)) {
-            $this->bytes = $data;
-        }
-
-        // TODO: length check
+        parent::__construct($bytes);
+        $this->curve = CurveResolver::curveByPublicKeyLength(count($this->bytes));
     }
 
-    public static function from(array|string $data, string $enc = 'hex') : PublicKey {
-        $length = 0;
-        if(is_array($data)) {
-            $length = count($data);
-        } elseif (is_string($data)) {
-            $length = count(encToBytes($data, $enc));
-        }
-
-        $curve = CurveResolver::curveByPublicKeyLength($length);
-        return new PublicKey($curve, $data, $enc);
-    }
-
+    /**
+     * Gets the class of the curve.
+     *
+     * @return string
+     */
     public function getCurve() : string {
         return $this->curve;
-    }
-
-    public function to(string $enc = 'hex'): array|string
-    {
-        return match ($enc) {
-            'bytes' => $this->bytes,
-            default => bytesToEnc($this->bytes, $enc),
-        };
-    }
-
-    public function __toString(): string
-    {
-        return $this->to('hex');
     }
 }
