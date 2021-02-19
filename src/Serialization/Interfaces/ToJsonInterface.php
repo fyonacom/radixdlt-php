@@ -11,11 +11,14 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Techworker\RadixDLT\Types\Particles\Tokens;
+namespace Techworker\RadixDLT\Serialization\Interfaces;
 
-use Techworker\RadixDLT\Types\Core\Address;
-
-interface OwnableInterface
+interface ToJsonInterface
 {
-    public function getOwner(): Address;
+    /**
+     * Tries to return a new json representation of the implementing class.
+     *
+     * @return array|string
+     */
+    public function toJson(): array | string;
 }

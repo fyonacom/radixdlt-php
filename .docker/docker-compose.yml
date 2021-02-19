@@ -4,6 +4,7 @@ services:
     build: ./
     volumes:
       - ./../:/srv
+      - ./xdebug.ini:/usr/local/etc/php/conf.d/99-xdebug-conf.ini
     environment:
       HOST_USER_UID: ${HOST_USER_UID}
       HOST_USER_GID: ${HOST_USER_GID}

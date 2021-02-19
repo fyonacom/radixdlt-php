@@ -1,4 +1,4 @@
-FROM php:8.0.0-cli-alpine
+FROM php:8.0.2-cli-alpine
 
 LABEL maintainer="ben@fyona.com"
 
@@ -19,12 +19,17 @@ RUN apk --update --no-cache add \
         openssh-client \
         su-exec \
         zlib-dev \
-        libzip-dev
+        libzip-dev \
+        icu-dev
+
+# intl
+RUN docker-php-ext-configure intl
+RUN docker-php-ext-install intl
 
 # install xdebug
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
-ADD ./xdebug.ini /usr/local/etc/php/conf.d/98-xdebug-conf.ini
+
 
 ## install prepared extensions
 RUN docker-php-ext-install -j$(nproc) bcmath

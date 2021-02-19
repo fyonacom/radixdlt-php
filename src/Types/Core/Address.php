@@ -13,57 +13,50 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Core;
 
+use CBOR\AbstractCBORObject;
 use CBOR\ByteStringObject;
 use InvalidArgumentException;
-use Techworker\RadixDLT\Crypto\Keys\AbstractKeyPair;
-use Techworker\RadixDLT\Crypto\Keys\CurveInterface;
-use Techworker\RadixDLT\Crypto\Keys\CurveResolver;
 use Techworker\RadixDLT\Crypto\Keys\Curves\Secp256k1;
+use Techworker\RadixDLT\Crypto\Keys\KeyPair;
 use Techworker\RadixDLT\Crypto\Keys\PrivateKey;
 use Techworker\RadixDLT\Crypto\Keys\PublicKey;
-use Techworker\RadixDLT\Serialization\Attributes\CBOR;
-use Techworker\RadixDLT\Serialization\Attributes\Encoding;
-use Techworker\RadixDLT\Serialization\Attributes\Json;
-use Techworker\RadixDLT\Types\BytesBased;
-use function Techworker\RadixDLT\bytesToEnc;
-use function Techworker\RadixDLT\encToBytes;
-use function Techworker\RadixDLT\radixHash;
+use Techworker\RadixDLT\Serialization\Interfaces\FromDsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
+use Techworker\RadixDLT\Serialization\Serializer;
+use Techworker\RadixDLT\Serialization\Interfaces\ToDsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
+use Techworker\RadixDLT\Types\BytesBasedObject;
 
-/**
- * Class RadixAddress
- *
- * Represents a radix address.
- */
-#[Json(prefix: ':adr:', encoding: 'base58')]
-#[CBOR(prefix: 4, target: ByteStringObject::class)]
-#[Encoding(encoding: 'base58')]
-class Address extends BytesBased
+class Address extends BytesBasedObject implements
+    FromJsonInterface,
+    ToJsonInterface,
+    FromDsonInterface,
+    ToDsonInterface
 {
-    /** @var int[] */
+    /**
+     * @var int[]
+     */
     protected array $hash;
+
     protected EUID $uid;
-    protected AbstractKeyPair $keyPair;
+
+    protected KeyPair $keyPair;
 
     /**
      * Address constructor.
      *
      * @param int[] $bytes
-     * @param AbstractKeyPair|null $keyPair
      */
-    protected function __construct(array $bytes, AbstractKeyPair $keyPair = null)
+    protected function __construct(array $bytes, KeyPair $keyPair = null)
     {
         parent::__construct($bytes);
 
         // when there is no keypair given, we will, at least,
         // extract the public key and build a half empty keypair
         // with it.
-        if($keyPair === null) {
+        if ($keyPair === null) {
             $publicKey = array_slice($this->bytes, 1, count($this->bytes) - 5);
-            $curve = CurveResolver::curveByPublicKeyLength(count($publicKey));
-
-            /** @var AbstractKeyPair $curve */
-            $keyPair = $curve::fromPublicKey($publicKey);
-            $this->keyPair = $keyPair;
+            $this->keyPair = radix()->keyService()->fromPublicKey($publicKey);
         } else {
             $this->keyPair = $keyPair;
         }
@@ -76,36 +69,46 @@ class Address extends BytesBased
         );
 
         for ($i = 0; $i < 4; $i++) {
-            if (!isset($checksum[$i]) || $checksum[$i] !== $this->bytes[count($this->bytes) - 4 + $i]) {
-                throw new InvalidArgumentException('Invalid address');
+            if (! isset($checksum[$i]) || $checksum[$i] !== $this->bytes[count($this->bytes) - 4 + $i]) {
+                throw new InvalidArgumentException('Invalid checksum for address');
             }
         }
 
         $this->hash = radixHash($this->getPublicKey()->toBytes());
-        $this->uid = EUID::from(array_slice($this->hash, 0, 16));
+        $this->uid = EUID::fromBytes(array_slice($this->hash, 0, 16));
+    }
+
+    /**
+     * Gets the string representation of the primitive using the default encoding.
+     */
+    public function __toString(): string
+    {
+        return $this->toBase58();
     }
 
     /**
      * Generates a new address with the given curve type.
-     *
-     * @param string $curve
-     * @param int $universe
-     * @return Address
      */
-    public static function generate(string $curve = Secp256k1::class, int $universe = 0): Address
+    public static function generateNew(string $curve = Secp256k1::class, int $universe = -1): self
     {
-        /** @var AbstractKeyPair $curve */
-        return self::fromKeyPair($curve::generateNew(), $universe);
+        $radix = radix();
+        if ($universe === -1) {
+            $universe = $radix->connection()->getUniverseMagicByte();
+        }
+
+        return self::fromKeyPair($radix->keyService()->generateNew($curve), $universe);
     }
 
     /**
      * Creates a new radix address instance from the given keypair.
-     *
-     * @param AbstractKeyPair $keyPair
-     * @param int $universe
-     * @return Address
      */
-    public static function fromKeyPair(AbstractKeyPair $keyPair, int $universe = 0) : Address {
+    public static function fromKeyPair(KeyPair $keyPair, int $universe = -1): self
+    {
+        $radix = radix();
+        if ($universe === -1) {
+            $universe = $radix->connection()->getUniverseMagicByte();
+        }
+
         $publicKey = $keyPair->getPublicKey()->toBytes();
         $bytes = [];
         $bytes[0] = $universe;
@@ -124,63 +127,45 @@ class Address extends BytesBased
     /**
      * Derives an address from the given public key.
      *
-     * @param array|string|PublicKey $publicKey
-     * @param string|null $enc
-     * @param int $universe
+     * @param int[]|string|PublicKey $publicKey
      * @return Address
-     * @throws InvalidArgumentException
      */
-    public static function fromPublicKey(array|string|PublicKey $publicKey, string $enc = null, int $universe = 0): Address
-    {
-        $length = 0;
-        if(is_string($publicKey)) {
-            $length = count(encToBytes($publicKey, $enc));
-        } elseif(is_array($publicKey)) {
-            $length = count($publicKey);
+    public static function fromPublicKey(
+        array | string | PublicKey $publicKey,
+        int $universe = -1,
+        string $enc = null
+    ): self {
+        $radix = radix();
+        if ($universe === -1) {
+            $universe = $radix->connection()->getUniverseMagicByte();
         }
 
-        if($publicKey instanceof PublicKey) {
-            $curve = $publicKey->getCurve();
-        } else {
-            $curve = CurveResolver::curveByPublicKeyLength($length);
-        }
-        /** @var AbstractKeyPair $curve */
-        return self::fromKeyPair($curve::fromPublicKey($publicKey, $enc), $universe);
+        return self::fromKeyPair(
+            radix()->keyService()->fromPublicKey($publicKey, $enc),
+            $universe
+        );
     }
 
     /**
      * Derives an address from the given private key.
      *
-     * @param array|string|PrivateKey $privateKey
-     * @param string|null $enc
-     * @param int $universe
-     * @return Address
+     * @param int[]|string|PrivateKey $privateKey
      */
-    public static function fromPrivateKey(array|string|PrivateKey $privateKey, ?string $enc = 'hex', int $universe = 0): Address
-    {
-        $length = 0;
-        if(is_string($privateKey)) {
-            $length = count(encToBytes($privateKey, $enc));
-        } elseif(is_array($privateKey)) {
-            $length = count($privateKey);
-        }
-
-        if($privateKey instanceof PrivateKey) {
-            $curve = $privateKey->getCurve();
-        } else {
-            $curve = CurveResolver::curveByPrivateKeyLength($length);
-        }
-
-        /** @var AbstractKeyPair $curve */
-        return self::fromKeyPair($curve::fromPrivateKey($privateKey, $enc), $universe);
+    public static function fromPrivateKey(
+        array | string | PrivateKey $privateKey,
+        int $universe = 0,
+        ?string $enc = 'hex',
+    ): self {
+        return self::fromKeyPair(
+            radix()->keyService()->fromPrivateKey($privateKey, $enc),
+            $universe
+        );
     }
 
     /**
      * Gets the universe identifier.
-     *
-     * @return int
      */
-    public function getUniverse(): int
+    public function getUniverseMagicByte(): int
     {
         return $this->bytes[0];
     }
@@ -188,18 +173,15 @@ class Address extends BytesBased
     /**
      * Gets the hash of the corresponding public key.
      *
-     * @param string|null $enc
      * @return int[]|string
      */
-    public function getHash(string $enc = null): array|string
+    public function getHash(string $enc = null): array | string
     {
         return bytesToEnc($this->hash, $enc ?? 'hex');
     }
 
     /**
      * Gets the corresponding public key.
-     *
-     * @return PublicKey
      */
     public function getPublicKey(): PublicKey
     {
@@ -208,8 +190,6 @@ class Address extends BytesBased
 
     /**
      * Gets the corresponding private key (if available).
-     *
-     * @return PrivateKey|null
      */
     public function getPrivateKey(): ?PrivateKey
     {
@@ -218,11 +198,35 @@ class Address extends BytesBased
 
     /**
      * Gets the related UID.
-     *
-     * @return EUID
      */
     public function getUID(): EUID
     {
         return $this->uid;
+    }
+
+    public static function fromJson(array | string $json): static
+    {
+        return new static(base58ToBytes(
+            Serializer::primitiveFromJson($json, ':adr:')
+        ));
+    }
+
+    public function toJson(): string | array
+    {
+        return Serializer::primitiveToJson($this, ':adr:');
+    }
+
+    public static function fromDson(array | string | AbstractCBORObject $dson): static
+    {
+        return new static(
+            Serializer::primitiveFromDson($dson, 4)
+        );
+    }
+
+    public function toDson(): ByteStringObject
+    {
+        return new ByteStringObject(
+            Serializer::primitiveToDson($this->bytes, 4)
+        );
     }
 }

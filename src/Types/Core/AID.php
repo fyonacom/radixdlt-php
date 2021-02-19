@@ -13,37 +13,72 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Core;
 
+use CBOR\AbstractCBORObject;
 use CBOR\ByteStringObject;
-use Techworker\RadixDLT\Serialization\Attributes\CBOR;
-use Techworker\RadixDLT\Serialization\Attributes\Encoding;
-use Techworker\RadixDLT\Serialization\Attributes\Json;
-use Techworker\RadixDLT\Types\BytesBased;
-use function Techworker\RadixDLT\bytesToEnc;
-use function Techworker\RadixDLT\encToBytes;
-use function Techworker\RadixDLT\writeUInt32BE;
+use InvalidArgumentException;
+use Techworker\RadixDLT\Serialization\Interfaces\FromDsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
+use Techworker\RadixDLT\Serialization\Serializer;
+use Techworker\RadixDLT\Serialization\Interfaces\ToDsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
+use Techworker\RadixDLT\Types\BytesBasedObject;
 
 /**
- * Class RadixUID
- *
- * @package Techworker\RadixDLT
+ * Class AID
+ * @package Techworker\RadixDLT\Types\Core
  */
-#[Json(prefix: ':aid:', encoding: 'hex')]
-#[CBOR(prefix: 8, target: ByteStringObject::class)]
-#[Encoding(encoding: 'hex')]
-class AID extends BytesBased
+class AID extends BytesBasedObject implements
+    FromJsonInterface,
+    ToJsonInterface,
+    FromDsonInterface,
+    ToDsonInterface
 {
     public const BYTES = 32;
+
     /**
-     * RadixUID constructor.
+     * AID constructor.
+     *
      * @param int[] $bytes
      */
     public function __construct(array $bytes)
     {
         parent::__construct($bytes);
+
         if (count($bytes) !== self::BYTES) {
-            throw new \InvalidArgumentException(
-                "AID length !== " . self::BYTES . ", is " . count($bytes)
+            throw new InvalidArgumentException(
+                'AID length !== ' . self::BYTES . ', is ' . count($bytes)
             );
         }
+    }
+
+    public function __toString(): string
+    {
+        return $this->toHex();
+    }
+
+    public static function fromJson(array | string $json): static
+    {
+        return new static(hexToBytes(
+            Serializer::primitiveFromJson($json, ':aid:')
+        ));
+    }
+
+    public function toJson(): string | array
+    {
+        return Serializer::primitiveToJson($this, ':aid:');
+    }
+
+    public static function fromDson(array | string | AbstractCBORObject $dson): static
+    {
+        return new static(
+            Serializer::primitiveFromDson($dson, 8)
+        );
+    }
+
+    public function toDson(): ByteStringObject
+    {
+        return new ByteStringObject(
+            Serializer::primitiveToDson($this->bytes, 8)
+        );
     }
 }

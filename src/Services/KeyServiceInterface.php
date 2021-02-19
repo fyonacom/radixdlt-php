@@ -11,11 +11,10 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Techworker\RadixDLT\Types\Particles\Tokens;
+namespace Techworker\RadixDLT\Services;
 
-use Techworker\RadixDLT\Types\Core\Address;
+use Techworker\RadixDLT\Crypto\Keys\AdapterInterface;
 
-interface OwnableInterface
+interface KeyServiceInterface extends AdapterInterface
 {
-    public function getOwner(): Address;
 }

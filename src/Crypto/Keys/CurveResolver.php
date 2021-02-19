@@ -13,22 +13,37 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Crypto\Keys;
 
+use CBOR\AbstractCBORObject;
 use InvalidArgumentException;
-use Techworker\RadixDLT\Radix;
 
+/**
+ * Class CurveResolver
+ *
+ * A simple helper class that tries to identify a curve by various parameters.
+ */
 class CurveResolver
 {
     /**
-     * Tries to determine a curve by the given public key length.
+     * CurveResolver constructor.
+     * @param array $supportedCurves
+     */
+    public function __construct(
+        protected array $supportedCurves
+    ) {
+    }
+
+    /**
+     * Tries to determine a curve by the given public key length. Returns the
+     * name of the curve class.
      *
-     * @param int $length
-     * @return string
      * @throws InvalidArgumentException
      */
-    public static function curveByPublicKeyLength(int $length): string
+    public function byPublicKeyLength(int $length): string
     {
-        foreach (Radix::RADIX_CURVES as $curve) {
+        /** @var AbstractCurve $curve */
+        foreach ($this->supportedCurves as $curve) {
             if (in_array($length, $curve::getPublicKeyLengths(), true)) {
+                /** @var string $curve */
                 return $curve;
             }
         }
@@ -39,16 +54,17 @@ class CurveResolver
     }
 
     /**
-     * Tries to determine a curve by the given public key length.
+     * Tries to determine a curve by the given public key length. Returns the
+     * name of the curve class.
      *
-     * @param int $length
-     * @return string
      * @throws InvalidArgumentException
      */
-    public static function curveByPrivateKeyLength(int $length): string
+    public function byPrivateKeyLength(int $length): string
     {
-        foreach (Radix::RADIX_CURVES as $curve) {
+        /** @var AbstractCurve $curve */
+        foreach ($this->supportedCurves as $curve) {
             if (in_array($length, $curve::getPrivateKeyLengths(), true)) {
+                /** @var string $curve */
                 return $curve;
             }
         }
@@ -58,9 +74,20 @@ class CurveResolver
         );
     }
 
-    public static function curveByName(string $name) : string {
-        foreach (Radix::RADIX_CURVES as $curve) {
+    /**
+     * Tries to determine the a curve by the given name. Returns the
+     * name of the curve class.
+     */
+    public function byName(string $name): string
+    {
+        if (class_exists($name)) {
+            return $name;
+        }
+
+        /** @var AbstractCurve $curve */
+        foreach ($this->supportedCurves as $curve) {
             if ($curve::getName() === $name) {
+                /** @var string $curve */
                 return $curve;
             }
         }

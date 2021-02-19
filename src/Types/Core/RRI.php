@@ -13,29 +13,31 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Core;
 
+use CBOR\AbstractCBORObject;
 use CBOR\ByteStringObject;
-use Techworker\RadixDLT\Serialization\Attributes\CBOR;
-use Techworker\RadixDLT\Serialization\Attributes\Encoding;
-use Techworker\RadixDLT\Serialization\Attributes\Json;
-use Techworker\RadixDLT\Types\BytesBased;
-use function Techworker\RadixDLT\binaryToBytes;
-use function Techworker\RadixDLT\bytesToEnc;
+use Techworker\RadixDLT\Serialization\Interfaces\FromDsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
+use Techworker\RadixDLT\Serialization\Serializer;
+use Techworker\RadixDLT\Serialization\Interfaces\ToDsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
+use Techworker\RadixDLT\Types\BytesBasedObject;
 
 /**
- * Class RadixHash
- *
- * @package Techworker\RadixDLT
+ * Class RRI
+ * @package Techworker\RadixDLT\Types\Core
  */
-#[Json(prefix: ':rri:', encoding: 'bin')]
-#[CBOR(prefix: 3, target: ByteStringObject::class)]
-#[Encoding(encoding: 'bin')]
-class RRI extends BytesBased
+class RRI extends BytesBasedObject implements
+    FromJsonInterface,
+    ToJsonInterface,
+    FromDsonInterface,
+    ToDsonInterface
 {
     protected Address $address;
+
     protected string $name;
 
     /**
-     * RadixUID constructor.
+     * RRI constructor.
      *
      * @param int[] $bytes
      */
@@ -54,6 +56,11 @@ class RRI extends BytesBased
         $this->name = $parts[1];
     }
 
+    public function __toString(): string
+    {
+        return $this->toBinary();
+    }
+
     public function getAddress(): Address
     {
         return $this->address;
@@ -64,10 +71,36 @@ class RRI extends BytesBased
         return $this->name;
     }
 
-    public static function fromAddressAndSymbol(Address $address, string $symbol) : RRI
+    public static function fromAddressAndSymbol(Address $address, String_ $symbol): self
     {
-        return RRI::fromBinary(
+        return self::fromBinary(
             sprintf('/%s/%s', $address->toBinary(), $symbol->toBinary())
+        );
+    }
+
+    public static function fromJson(array | string $json): static
+    {
+        return new static(binaryToBytes(
+            Serializer::primitiveFromJson($json, ':rri:')
+        ));
+    }
+
+    public function toJson(): string | array
+    {
+        return Serializer::primitiveToJson($this, ':rri:');
+    }
+
+    public static function fromDson(array | string | AbstractCBORObject $dson): static
+    {
+        return new static(
+            Serializer::primitiveFromDson($dson, 6)
+        );
+    }
+
+    public function toDson(): ByteStringObject
+    {
+        return new ByteStringObject(
+            Serializer::primitiveToDson($this->bytes, 6)
         );
     }
 }

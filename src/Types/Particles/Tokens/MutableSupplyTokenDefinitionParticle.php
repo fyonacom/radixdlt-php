@@ -14,28 +14,27 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT\Types\Particles\Tokens;
 
 use BN\BN;
-use Techworker\RadixDLT\Serialization\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\ToJsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
 use Techworker\RadixDLT\Types\Core\Address;
-use Techworker\RadixDLT\Types\Core\RRI;
-use Techworker\RadixDLT\Types\Core\String;
 use Techworker\RadixDLT\Types\Core\EUID;
+use Techworker\RadixDLT\Types\Core\RRI;
+use Techworker\RadixDLT\Types\Core\String_;
 use Techworker\RadixDLT\Types\Core\UInt256;
 use Techworker\RadixDLT\Types\Particles\AbstractParticle;
 
 class MutableSupplyTokenDefinitionParticle extends AbstractParticle
-    implements OwnableInterface, ToJsonInterface, FromJsonInterface
 {
     protected function __construct(
         protected int $version,
         protected EUID $hid,
         protected array $destinations,
         protected RRI $rri,
-        protected string $name,
-        protected string $description,
+        protected String_ $name,
+        protected String_ $description,
         protected UInt256 $granularity,
-        protected string $iconUrl,
-        protected string $url,
+        protected String_ $iconUrl,
+        protected String_ $url,
         protected TokenPermission $permissions,
     ) {
         if ($granularity->getBn()->lt(new BN('0'))) {
@@ -48,8 +47,8 @@ class MutableSupplyTokenDefinitionParticle extends AbstractParticle
         return $this->rri->getAddress();
     }
 
-
-    public function getSymbol() : string {
+    public function getSymbol(): string
+    {
         return $this->rri->getName();
     }
 
@@ -58,31 +57,30 @@ class MutableSupplyTokenDefinitionParticle extends AbstractParticle
         return [$this->rri->getAddress()->getUID()];
     }
 
-
-    public static function fromJson(array|string $json): MutableSupplyTokenDefinitionParticle
+    public static function fromJson(array | string $json): self
     {
-        if(is_string($json)) {
+        if (is_string($json)) {
             throw new \InvalidArgumentException('Invalid.');
         }
 
-        $version = (int)$json['version'];
-        $hid = EUID::fromJson((string)$json['hid']);
+        $version = (int) $json['version'];
+        $hid = EUID::fromJson((string) $json['hid']);
         $destinations = [];
         /** @var string $destination */
-        foreach($json['destinations'] as $destination) {
-            $destinations[] = EUID::fromJson("$destination");
+        foreach ($json['destinations'] as $destination) {
+            $destinations[] = EUID::fromJson("${destination}");
         }
-        $rri = RRI::fromJson((string)$json['rri']);
-        $name = String::fromJson((string)$json['name']);
+        $rri = RRI::fromJson((string) $json['rri']);
+        $name = String_::fromJson((string) $json['name']);
         $symbol = null;
-        if(isset($json['symbol'])) {
-            $symbol = String::fromJson((string)$json['symbol']);
+        if (isset($json['symbol'])) {
+            $symbol = String_::fromJson((string) $json['symbol']);
         }
-        $description = String::fromJson((string)$json['description']);
-        $granularity = UInt256::fromJson((string)$json['granularity']);
-        $iconUrl = String::fromJson((string)$json['iconUrl']);
-        $url = String::fromJson((string)$json['url']);
-        $permissions = TokenPermission::fromJson((string)$json['permissions']);
+        $description = String_::fromJson((string) $json['description']);
+        $granularity = UInt256::fromJson((string) $json['granularity']);
+        $iconUrl = String_::fromJson((string) $json['iconUrl']);
+        $url = String_::fromJson((string) $json['url']);
+        $permissions = TokenPermission::fromJson((string) $json['permissions']);
 
         return new self(
             version: $version,
@@ -98,13 +96,13 @@ class MutableSupplyTokenDefinitionParticle extends AbstractParticle
         );
     }
 
-    public function toJson(): array|string
+    public function toJson(): array | string
     {
         $json = [];
         $json['serializer'] = 'radix.particles.mutable_supply_token_definition';
         $json['version'] = $this->version;
         $json['hid'] = $this->hid->toJson();
-        $json['destinations'] = array_map(fn(EUID $uid) => $uid->toJson(), $this->destinations);
+        $json['destinations'] = array_map(fn (EUID $uid) => $uid->toJson(), $this->destinations);
         $json['rri'] = $this->rri->toJson();
         $json['name'] = $this->name->toJson();
         $json['description'] = $this->description->toJson();

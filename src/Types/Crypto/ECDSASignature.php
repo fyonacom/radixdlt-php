@@ -13,18 +13,34 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Crypto;
 
+use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
+use Techworker\RadixDLT\Types\Core\Bytes;
 
-use Techworker\RadixDLT\Serialization\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\ToJsonInterface;
-use Techworker\RadixDLT\Types\Core\EUID;
-
-class ECDSASignatures implements FromJsonInterface, ToJsonInterface
+class ECDSASignature
 {
     public function __construct(
-        protected EUID $hid,
-        protected EUID $version,
-        protected array signatures
-    )
+        protected Bytes $r,
+        protected Bytes $s,
+        protected int $version
+    ) {
+    }
+
+    public static function fromJson(array | string $json): FromJsonInterface
     {
+        $data = [];
+        $data['r'] = Bytes::fromJson((string) $json['r']);
+        $data['s'] = Bytes::fromJson((string) $json['s']);
+        $data['version'] = (int) $json['version'];
+        return new self(...$data);
+    }
+
+    public function toJson(): array | string
+    {
+        $json = [];
+        $json['r'] = $this->r->toJson();
+        $json['s'] = $this->s->toJson();
+        $json['version'] = $this->version;
+        return $json;
     }
 }

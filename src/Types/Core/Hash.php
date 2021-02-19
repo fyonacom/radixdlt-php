@@ -13,25 +13,30 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Core;
 
+use CBOR\AbstractCBORObject;
 use CBOR\ByteStringObject;
-use Techworker\RadixDLT\Serialization\Attributes\CBOR;
-use Techworker\RadixDLT\Serialization\Attributes\Encoding;
-use Techworker\RadixDLT\Serialization\Attributes\Json;
-use Techworker\RadixDLT\Types\BytesBased;
+use InvalidArgumentException;
+use Techworker\RadixDLT\Serialization\Interfaces\FromDsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
+use Techworker\RadixDLT\Serialization\Serializer;
+use Techworker\RadixDLT\Serialization\Interfaces\ToDsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
+use Techworker\RadixDLT\Types\BytesBasedObject;
 
 /**
- * Class RadixHash
- *
- * @package Techworker\RadixDLT
+ * Class Hash
+ * @package Techworker\RadixDLT\Types\Core
  */
-#[Json(prefix: ':hsh:', encoding: 'hex')]
-#[CBOR(prefix: 3, target: ByteStringObject::class)]
-#[Encoding(encoding: 'hex')]
-class Hash extends BytesBased
+class Hash extends BytesBasedObject implements
+    FromJsonInterface,
+    ToJsonInterface,
+    FromDsonInterface,
+    ToDsonInterface
 {
     public const BYTES = 64;
+
     /**
-     * RadixUID constructor.
+     * Hash constructor.
      *
      * @param int[] $bytes
      */
@@ -40,9 +45,40 @@ class Hash extends BytesBased
         parent::__construct($bytes);
 
         if (count($this->bytes) !== self::BYTES) {
-            throw new \InvalidArgumentException(
-                "Hash length !== " . self::BYTES . ", is " . count($bytes)
+            throw new InvalidArgumentException(
+                'Hash length !== ' . self::BYTES . ', is ' . count($bytes)
             );
         }
+    }
+
+    public function __toString(): string
+    {
+        return $this->toHex();
+    }
+
+    public static function fromJson(array | string $json): static
+    {
+        return new static(hexToBytes(
+            Serializer::primitiveFromJson($json, ':hsh:')
+        ));
+    }
+
+    public function toJson(): string | array
+    {
+        return Serializer::primitiveToJson($this, ':hsh:');
+    }
+
+    public static function fromDson(array | string | AbstractCBORObject $dson): static
+    {
+        return new static(
+            Serializer::primitiveFromDson($dson, 3)
+        );
+    }
+
+    public function toDson(): ByteStringObject
+    {
+        return new ByteStringObject(
+            Serializer::primitiveToDson($this->bytes, 3)
+        );
     }
 }

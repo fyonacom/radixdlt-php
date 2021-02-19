@@ -14,34 +14,28 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT\Types\Core;
 
 use BN\BN;
+use CBOR\AbstractCBORObject;
 use CBOR\ByteStringObject;
-use InvalidArgumentException;
-use Techworker\RadixDLT\Crypto\Keys\AbstractKeyPair;
-use Techworker\RadixDLT\Crypto\Keys\CurveResolver;
-use Techworker\RadixDLT\Crypto\Keys\Curves\Secp256k1;
-use Techworker\RadixDLT\Crypto\Keys\PrivateKey;
-use Techworker\RadixDLT\Crypto\Keys\PublicKey;
-use Techworker\RadixDLT\Serialization\Attributes\CBOR;
-use Techworker\RadixDLT\Serialization\Attributes\Encoding;
-use Techworker\RadixDLT\Serialization\Attributes\Json;
-use Techworker\RadixDLT\Types\BytesBased;
-use function Techworker\RadixDLT\bytesToEnc;
-use function Techworker\RadixDLT\encToBytes;
-use function Techworker\RadixDLT\radixHash;
+use Techworker\RadixDLT\Serialization\Interfaces\FromDsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\ToDsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
+use Techworker\RadixDLT\Types\BytesBasedObject;
 
 /**
- * Class RadixString
+ * Class UInt256
+ * @package Techworker\RadixDLT\Types\Core
  */
-#[Json(prefix: ':u20:', encoding: 'bin')]
-#[CBOR(prefix: 4, target: ByteStringObject::class)]
-#[Encoding(encoding: 'bin')]
-class UInt256 extends BytesBased
+class UInt256 extends BytesBasedObject implements
+    FromJsonInterface,
+    ToJsonInterface,
+    FromDsonInterface,
+    ToDsonInterface
 {
     protected BN $bn;
 
     /**
-     * RadixUInt256 constructor.
-     * @param int[] $bytes
+     * UInt256 constructor.
      * @throws \Exception
      */
     public function __construct(array $bytes)
@@ -55,38 +49,39 @@ class UInt256 extends BytesBased
      * @return static
      * @throws \Exception
      */
-    public static function fromJson(array|string $json): static
+    public static function fromJson(array | string $json): static
     {
-        if(is_array($json)) {
-            throw new \Exception('...');
-        }
-
-        $jsonPrefix = static::getJsonPrefix();
-        if($jsonPrefix === null) {
-            throw new \Exception('...');
-        }
-
-        $withoutPrefix = substr($json, strlen($jsonPrefix));
-        /** @var int[] $bnBytes */
-        $bnBytes = (new BN("$withoutPrefix"))->toArray();
-        return new static($bnBytes);
+        return new static([1]);
     }
 
     /**
      * @return string|array
      * @throws \Exception
      */
-    public function toJson(): string|array
+    public function toJson(): string | array
     {
-        $prefix = static::getJsonPrefix();
-        if($prefix === null) {
-            throw new \Exception('...');
-        }
-
-        return $prefix . (string)$this->bn->toString();
+        return 'ABC';
     }
 
-    public function getBn() : BN {
+    public function getBn(): BN
+    {
         return $this->bn;
     }
+
+    public function __toString()
+    {
+        return 'ABC';
+    }
+
+    public static function fromDson(array|string|AbstractCBORObject $dson): static
+    {
+        return new static([1,2,3]);
+    }
+
+    public function toDson(): ByteStringObject
+    {
+        return new ByteStringObject('ABC');
+    }
+
+
 }

@@ -13,15 +13,12 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles;
 
-use Techworker\RadixDLT\Serialization\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\ToJsonInterface;
-use Techworker\RadixDLT\Types\Core\Address;
+use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
 use Techworker\RadixDLT\Types\Core\RRI;
 
 class RRIParticle extends AbstractParticle
-    implements ToJsonInterface, FromJsonInterface
 {
-
     protected function __construct(
         protected RRI $rri
     ) {
@@ -32,22 +29,20 @@ class RRIParticle extends AbstractParticle
         return [$this->rri];
     }
 
-
-    public static function fromJson(array|string $json): RRIParticle
+    public static function fromJson(array | string $json): self
     {
-        if(is_string($json)) {
+        if (is_string($json)) {
             throw new \InvalidArgumentException('Invalid.');
         }
 
-        $rri = RRI::fromJson((string)$json['rri']);
+        $rri = RRI::fromJson((string) $json['rri']);
         return new self($rri);
     }
 
-    public function toJson(): array|string
+    public function toJson(): array | string
     {
         $json = [];
         $json['rri'] = $this->rri->toJson();
         return $json;
     }
-
 }

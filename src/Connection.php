@@ -11,15 +11,19 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Techworker\RadixDLT\Serialization\Attributes;
+namespace Techworker\RadixDLT;
 
-use Attribute;
-use Techworker\RadixDLT\Serialization\AbstractAttribute;
-
-#[Attribute(Attribute::TARGET_CLASS)]
-class Json extends AbstractAttribute
+// TODO!
+class Connection
 {
-    public function __construct(protected string $prefix, protected string $encoding)
+    protected int $universeMagicByte = 0;
+
+    public function __construct()
     {
+    }
+
+    public function getUniverseMagicByte(): int
+    {
+        return $this->universeMagicByte;
     }
 }

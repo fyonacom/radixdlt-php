@@ -13,34 +13,34 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Core;
 
+use CBOR\AbstractCBORObject;
 use CBOR\ByteStringObject;
-use Techworker\RadixDLT\Serialization\Attributes\CBOR;
-use Techworker\RadixDLT\Serialization\Attributes\Encoding;
-use Techworker\RadixDLT\Serialization\Attributes\Json;
-use Techworker\RadixDLT\Types\BytesBased;
-use function Techworker\RadixDLT\bytesToEnc;
-use function Techworker\RadixDLT\encToBytes;
-use function Techworker\RadixDLT\writeUInt32BE;
+use Techworker\RadixDLT\Serialization\Interfaces\FromDsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
+use Techworker\RadixDLT\Serialization\Serializer;
+use Techworker\RadixDLT\Serialization\Interfaces\ToDsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
+use Techworker\RadixDLT\Types\BytesBasedObject;
 
 /**
- * Class RadixUID
- *
- * @package Techworker\RadixDLT
+ * Class EUID
+ * @package Techworker\RadixDLT\Types\Core
  */
-#[Json(prefix: ':uid:', encoding: 'hex')]
-#[CBOR(prefix: 2, target: ByteStringObject::class)]
-#[Encoding(encoding: 'hex')]
-class EUID extends BytesBased
+class EUID extends BytesBasedObject implements
+    FromJsonInterface,
+    ToJsonInterface,
+    FromDsonInterface,
+    ToDsonInterface
 {
     /**
-     * Shard bytes (first 8 of bytes)
+     * Shard bytes (first 8 bytes)
      *
      * @var int[]
      */
     protected array $shard;
 
     /**
-     * RadixUID constructor.
+     * EUID constructor.
      * @param int[] $bytes
      */
     public function __construct(array $bytes)
@@ -49,26 +49,62 @@ class EUID extends BytesBased
         $this->shard = array_slice($this->bytes, 0, 8);
     }
 
+    public function __toString(): string
+    {
+        return $this->toHex();
+    }
+
+    public static function getDefaultEncoding(): string
+    {
+        return 'hex';
+    }
+
     /**
      * Gets the shard.
      *
-     * @param string|null $enc
      * @return int[]|string
      */
-    public function getShard(string $enc = null) : array|string {
+    public function getShard(string $enc = null): array | string
+    {
         return bytesToEnc($this->shard, $enc ?? 'hex');
     }
 
     /**
      * Creates a new UID instance from the given number
-     * @param int $number
      * @return EUID
+     * @throws \Exception
      */
-    public static function fromInt(int $number) : self
+    public static function fromInt(int $number): self
     {
         $bytes = array_fill(0, 16, 0);
         writeUInt32BE($bytes, $number, 12);
 
         return parent::from($bytes);
+    }
+
+    public static function fromJson(array | string $json): static
+    {
+        return new static(hexToBytes(
+            Serializer::primitiveFromJson($json, ':uid:')
+        ));
+    }
+
+    public function toJson(): string | array
+    {
+        return Serializer::primitiveToJson($this, ':uid:');
+    }
+
+    public static function fromDson(array | string | AbstractCBORObject $dson): static
+    {
+        return new static(
+            Serializer::primitiveFromDson($dson, 2)
+        );
+    }
+
+    public function toDson(): ByteStringObject
+    {
+        return new ByteStringObject(
+            Serializer::primitiveToDson($this->bytes, 2)
+        );
     }
 }

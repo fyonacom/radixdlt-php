@@ -13,43 +13,56 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles;
 
-use Techworker\RadixDLT\Serialization\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\ToJsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
 use Techworker\RadixDLT\Types\Core\Address;
-use Techworker\RadixDLT\Types\Core\RRI;
-use Techworker\RadixDLT\Types\Core\String;
+use Techworker\RadixDLT\Types\Core\String_;
 
 class UniqueParticle extends AbstractParticle
-    implements ToJsonInterface, FromJsonInterface
 {
-
+    /**
+     * UniqueParticle constructor.
+     * @param Address $address
+     * @param String_ $name
+     * @param int|null $nonce
+     */
     protected function __construct(
         protected Address $address,
-        protected string $name,
+        protected String_ $name,
         protected ?int $nonce = null
     ) {
     }
 
+    /**
+     * @return Address[]
+     */
     public function getAddresses(): array
     {
         return [$this->address];
     }
 
-
-    public static function fromJson(array|string $json): UniqueParticle
+    /**
+     * @param array|string $json
+     * @throws \Exception
+     */
+    public static function fromJson(array | string $json): self
     {
-        if(is_string($json)) {
+        if (is_string($json)) {
             throw new \InvalidArgumentException('Invalid.');
         }
 
-        $address = Address::fromJson((string)$json['address']);
-        $name = String::fromJson((string)$json['name']);
+        $address = Address::fromJson((string) $json['address']);
+        $name = String_::fromJson((string) $json['name']);
         // TODO: create nonce if not set?
-        $nonce = (int)$json['nonce'];
+        $nonce = (int) $json['nonce'];
         return new self($address, $name, $nonce);
     }
 
-    public function toJson(): array|string
+    /**
+     * @return array|string
+     * @throws \Exception
+     */
+    public function toJson(): array | string
     {
         $json = [];
         $json['address'] = $this->address->toJson();
@@ -57,5 +70,4 @@ class UniqueParticle extends AbstractParticle
         $json['nonce'] = $this->nonce;
         return $json;
     }
-
 }

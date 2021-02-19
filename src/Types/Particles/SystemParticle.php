@@ -13,15 +13,11 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles;
 
-use Techworker\RadixDLT\Serialization\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\ToJsonInterface;
-use Techworker\RadixDLT\Types\Core\Address;
-use Techworker\RadixDLT\Types\Core\RRI;
+use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
 
 class SystemParticle extends AbstractParticle
-    implements ToJsonInterface, FromJsonInterface
 {
-
     protected function __construct(
         protected int $epoch,
         protected int $view,
@@ -34,19 +30,19 @@ class SystemParticle extends AbstractParticle
         return [];
     }
 
-    public static function fromJson(array|string $json): SystemParticle
+    public static function fromJson(array | string $json): self
     {
-        if(is_string($json)) {
+        if (is_string($json)) {
             throw new \InvalidArgumentException('Invalid.');
         }
 
-        $epoch = (int)$json['epoch'];
-        $view = (int)$json['view'];
-        $timestamp = (int)$json['timestamp'];
+        $epoch = (int) $json['epoch'];
+        $view = (int) $json['view'];
+        $timestamp = (int) $json['timestamp'];
         return new self($epoch, $view, $timestamp);
     }
 
-    public function toJson(): array|string
+    public function toJson(): array | string
     {
         $json = [];
         $json['epoch'] = $this->epoch;

@@ -13,33 +13,44 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles;
 
-use Techworker\RadixDLT\Serialization\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\ToJsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
 use Techworker\RadixDLT\Types\Core\Address;
-use Techworker\RadixDLT\Types\Core\String;
+use Techworker\RadixDLT\Types\Core\String_;
 
 class ParticleIndex
-    implements ToJsonInterface, FromJsonInterface
 {
-
+    /**
+     * ParticleIndex constructor.
+     * @param Address $address
+     * @param String_ $unique
+     */
     protected function __construct(
-        protected Address $address,
-        protected string $unique
+    protected Address $address,
+    protected String_ $unique
     ) {
     }
 
-    public static function fromJson(array|string $json): ParticleIndex
+    public static function fromArray(array $json)
     {
-        if(is_string($json)) {
+    }
+
+    public function toArray(): array
+    {
+    }
+
+    public static function fromJson(array | string $json): self
+    {
+        if (is_string($json)) {
             throw new \InvalidArgumentException('Invalid.');
         }
 
-        $address = Address::fromJson((string)$json['address']);
-        $unique = String::fromJson((string)$json['unique']);
+        $address = Address::fromJson((string) $json['address']);
+        $unique = String_::fromJson((string) $json['unique']);
         return new self($address, $unique);
     }
 
-    public function toJson(): array|string
+    public function toJson(): array | string
     {
         $json = [];
         $json['address'] = $this->address->toJson();

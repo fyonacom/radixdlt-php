@@ -13,44 +13,23 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles;
 
-use CBOR\AbstractCBORObject;
-use Techworker\RadixDLT\Serialization\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\ToJsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
 use Techworker\RadixDLT\Types\Core\Address;
-use Techworker\RadixDLT\Types\Universe\UniverseConfig;
 
 /**
  * Class Particle
  * @package Techworker\RadixDLT\Types\Particles
  */
 abstract class AbstractParticle
-    implements ToJsonInterface, FromJsonInterface
 {
-    abstract public function getAddresses() : array;
+    abstract public function getAddresses(): array;
 
-    public function getDestinations() : array {
+    public function getDestinations(): array
+    {
         return array_map(
-            fn(Address $address) => $address->getUID(),
+            fn (Address $address) => $address->getUID(),
             $this->getAddresses()
         );
     }
-
-    public static function fromJson(array|string $json): AbstractParticle|SpunParticle
-    {
-        if(is_string($json)) {
-            throw new \Exception('..');
-        }
-
-        return match($json['serializer']) {
-            'a' => SpunParticle::fromJson($json),
-            default => UniqueParticle::fromJson($json)
-        };
-    }
-
-    public function toJson(): array|string
-    {
-        return '';
-    }
-
-
 }

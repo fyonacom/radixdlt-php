@@ -11,11 +11,14 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Techworker\RadixDLT\Types\Particles\Tokens;
+namespace Techworker\RadixDLT\Serialization\Interfaces;
 
-use Techworker\RadixDLT\Types\Core\Address;
+use CBOR\AbstractCBORObject;
 
-interface OwnableInterface
+interface ToDsonInterface
 {
-    public function getOwner(): Address;
+    /**
+     * Tries to return a new CBOR representation of the implementing class.
+     */
+    public function toDson(): AbstractCBORObject;
 }

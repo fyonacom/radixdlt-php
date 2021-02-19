@@ -13,47 +13,20 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles;
 
-use Techworker\RadixDLT\Serialization\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\ToJsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
 
 class ParticleGroup
-    implements ToJsonInterface, FromJsonInterface
 {
     /**
      * RadixParticleGroup constructor.
      * @param SpunParticle[] $particles
      * @param array $metaData
      */
-    public function __construct(protected array $particles = [], protected array $metaData)
-    {
+    public function __construct(
+        protected array $particles = [],
+        protected array $metaData = []
+    ) {
     }
-
-    public static function fromJson(array|string $json): self
-    {
-        if(is_string($json)) {
-            throw new \Exception('...');
-        }
-
-        $spunParticles = [];
-        /** @var array $jsonParticle */
-        foreach((array)$json['particles'] as $jsonParticle) {
-            $spunParticles[] = SpunParticle::fromJson($jsonParticle);
-        }
-
-        return new self($spunParticles, []);
-    }
-
-    public function toJson(): array|string
-    {
-        $json = [];
-        $json['particles'] = [];
-        $json['metaData'] = [];
-        $json['serializer'] = 'radix.particle_group';
-        foreach($this->particles as $particle) {
-            $json['particles'][] = $particle->toJson();
-        }
-        return $json;
-    }
-
 
 }
