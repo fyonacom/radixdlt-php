@@ -36,7 +36,7 @@
         "simplito/elliptic-php": "Install this package when you have no openssl support."
     },
     "scripts": {
-        "test": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html coverage --testdox",
+        "test": "./vendor/bin/phpunit --testdox",
         "style-check": "./vendor/bin/ecs check",
         "style-fix": "./vendor/bin/ecs check --fix",
         "psalm": "XDEBUG_MODE=off ./vendor/bin/psalm"
