@@ -1,5 +1,6 @@
 {
-    "name": "ben/php",
+    "name": "fyonacom/radixdlt-php",
+    "description": "Radix in PHP",
     "authors": [
         {
             "name": "Benjamin Ansbach",
@@ -7,12 +8,12 @@
         }
     ],
     "require": {
+        "ext-openssl": "*",
         "tuupola/base58": "^2.1",
         "spomky-labs/cbor-php": "^2.0",
         "psr/container": "^1.0",
         "pimple/pimple": "^3.3",
-        "friendsofphp/php-cs-fixer": "^2.18",
-      "ext-openssl": "*"
+        "friendsofphp/php-cs-fixer": "^2.18"
     },
     "autoload": {
         "psr-4": {
