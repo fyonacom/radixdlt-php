@@ -6,15 +6,15 @@ cli:
 	docker-compose run php ash
 
 test:
-	docker-compose run php ash -c "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html coverage --testdox"
+	docker-compose run php ash -c "composer run test"
 
 check-style:
-	docker-compose run php ash -c "php /srv/vendor/bin/ecs check"
+	docker-compose run php ash -c "composer run ecs-check"
 
 fix-style:
-	docker-compose run php ash -c "php /srv/vendor/bin/ecs check --fix"
+	docker-compose run php ash -c "composer run ecs-fix"
 
 psalm:
-	docker-compose run php ash -c "php /srv/vendor/bin/psalm"
+	docker-compose run php ash -c "composer run psalm"
 
 .PHONY: cli test
