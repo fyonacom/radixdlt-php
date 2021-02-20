@@ -21,7 +21,9 @@ use Techworker\RadixDLT\Types\Primitives\Address;
  */
 abstract class AbstractParticle
 {
-    abstract public function getAddresses(): array;
+    public function getAddresses(): array {
+        return [];
+    }
 
     public function getDestinations(): array
     {

@@ -14,11 +14,12 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT\Types\Universe;
 
 use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
 use Techworker\RadixDLT\Types\Primitives\Bytes;
+use Techworker\RadixDLT\Types\Primitives\Hash;
 use Techworker\RadixDLT\Types\Primitives\String_;
 
-final class UniverseConfig implements FromJsonInterface, ToJsonInterface
+final class UniverseConfig implements
+    FromJsonInterface, \Stringable
 {
     public const TYPE_PRODUCTION = 0;
 
@@ -31,6 +32,7 @@ final class UniverseConfig implements FromJsonInterface, ToJsonInterface
     private function __construct(
         protected int $magic,
         protected Bytes $creator,
+        protected Hash $hid,
         protected int $port,
         protected Bytes $signatureR,
         protected Bytes $signatureS,
@@ -43,41 +45,110 @@ final class UniverseConfig implements FromJsonInterface, ToJsonInterface
         $this->magicByte = $this->magic & 0xff;
     }
 
-    public static function fromJson(array | string $json): static
+    public static function fromJson(array|string $json): static
     {
         if (is_string($json)) {
-            $json = (array) json_decode($json, true);
+            $json = (array)json_decode($json, true);
         }
 
         $data = [];
-        $data['magic'] = (int) $json['magic'];
-        $data['creator'] = Bytes::fromJson((string) $json['creator']);
-        $data['port'] = (int) $json['port'];
-        $data['signatureR'] = Bytes::fromJson((string) $json['signature.r']);
-        $data['signatureS'] = Bytes::fromJson((string) $json['signature.s']);
-        $data['name'] = String_::fromJson((string) $json['name']);
-        $data['description'] = String_::fromJson((string) $json['description']);
-        $data['type'] = (int) $json['type'];
-        $data['timestamp'] = (int) $json['timestamp'];
+        $data['magic'] = (int)$json['magic'];
+        $data['hid'] = Hash::fromJson((string)$json['hid']);
+        $data['creator'] = Bytes::fromJson((string)$json['creator']);
+        $data['port'] = (int)$json['port'];
+        $data['signatureR'] = Bytes::fromJson((string)$json['signature.r']);
+        $data['signatureS'] = Bytes::fromJson((string)$json['signature.s']);
+        $data['name'] = String_::fromJson((string)$json['name']);
+        $data['description'] = String_::fromJson((string)$json['description']);
+        $data['type'] = (int)$json['type'];
+        $data['timestamp'] = (int)$json['timestamp'];
         $data['genesis'] = [];
 
         return new self(...$data);
     }
 
-    public function toJson(): array | string
+    public function getMagicByte(): int
     {
-        $data = [];
-        $data['magic'] = $this->magic;
-        $data['creator'] = $this->creator->toJson();
-        $data['port'] = $this->port;
-        $data['signatureR'] = $this->signatureR->toJson();
-        $data['signatureS'] = $this->signatureS->toJson();
-        $data['name'] = $this->name->toJson();
-        $data['description'] = $this->description->toJson();
-        $data['type'] = $this->type;
-        $data['timestamp'] = $this->timestamp;
-        $data['genesis'] = [];
-
-        return $data;
+        return $this->magicByte;
     }
+
+    public function getMagic(): int
+    {
+        return $this->magic;
+    }
+
+    public function getCreator(): Bytes
+    {
+        return $this->creator;
+    }
+
+    public function getHid(): Hash
+    {
+        return $this->hid;
+    }
+
+    public function getPort(): int
+    {
+        return $this->port;
+    }
+
+    public function getSignatureR(): Bytes
+    {
+        return $this->signatureR;
+    }
+
+    public function getSignatureS(): Bytes
+    {
+        return $this->signatureS;
+    }
+
+    public function getName(): String_
+    {
+        return $this->name;
+    }
+
+    public function getDescription(): String_
+    {
+        return $this->description;
+    }
+
+    public function getType(): int
+    {
+        return $this->type;
+    }
+
+    public function isProduction(): bool
+    {
+        return $this->type === self::TYPE_PRODUCTION;
+    }
+
+    public function isDevelopment(): bool
+    {
+        return $this->type === self::TYPE_DEVELOPMENT;
+    }
+
+    public function isTest(): bool
+    {
+        return $this->type === self::TYPE_TEST;
+    }
+
+    public function getTimestamp(): int
+    {
+        return $this->timestamp;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGenesis(): array
+    {
+        return $this->genesis;
+    }
+
+    public function __toString()
+    {
+        return $this->name . " " . $this->magic . " " . euid();
+    }
+
+
 }
