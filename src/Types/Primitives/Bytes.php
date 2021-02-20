@@ -11,11 +11,10 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Techworker\RadixDLT\Types\Core;
+namespace Techworker\RadixDLT\Types\Primitives;
 
 use CBOR\AbstractCBORObject;
 use CBOR\ByteStringObject;
-use InvalidArgumentException;
 use Techworker\RadixDLT\Serialization\Interfaces\FromDsonInterface;
 use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
 use Techworker\RadixDLT\Serialization\Interfaces\ToDsonInterface;
@@ -24,61 +23,43 @@ use Techworker\RadixDLT\Serialization\Serializer;
 use Techworker\RadixDLT\Types\BytesBasedObject;
 
 /**
- * Class Hash
- * @package Techworker\RadixDLT\Types\Core
+ * Class Bytes
+ * @package Techworker\RadixDLT\Types\Primitives
  */
-class Hash extends BytesBasedObject implements
+class Bytes extends BytesBasedObject implements
     FromJsonInterface,
     ToJsonInterface,
     FromDsonInterface,
     ToDsonInterface
 {
-    public const BYTES = 64;
-
-    /**
-     * Hash constructor.
-     *
-     * @param int[] $bytes
-     */
-    public function __construct(array $bytes)
-    {
-        parent::__construct($bytes);
-
-        if (count($this->bytes) !== self::BYTES) {
-            throw new InvalidArgumentException(
-                'Hash length !== ' . self::BYTES . ', is ' . count($bytes)
-            );
-        }
-    }
-
     public function __toString(): string
     {
-        return $this->toHex();
+        return $this->toBase64();
     }
 
     public static function fromJson(array | string $json): static
     {
-        return new static(hexToBytes(
-            Serializer::primitiveFromJson($json, ':hsh:')
+        return new static(base64ToBytes(
+            Serializer::primitiveFromJson($json, ':byt:')
         ));
     }
 
     public function toJson(): string | array
     {
-        return Serializer::primitiveToJson($this, ':hsh:');
+        return Serializer::primitiveToJson($this, ':byt:');
     }
 
     public static function fromDson(array | string | AbstractCBORObject $dson): static
     {
         return new static(
-            Serializer::primitiveFromDson($dson, 3)
+            Serializer::primitiveFromDson($dson, 1)
         );
     }
 
     public function toDson(): ByteStringObject
     {
         return new ByteStringObject(
-            Serializer::primitiveToDson($this->bytes, 3)
+            Serializer::primitiveToDson($this->bytes, 1)
         );
     }
 }

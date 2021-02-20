@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles\Tokens;
 
-use Techworker\RadixDLT\Types\Core\String_;
+use Techworker\RadixDLT\Types\Primitives\String_;
 
 class TokenPermission
 {

@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles;
 
-use Techworker\RadixDLT\Types\Core\Address;
-use Techworker\RadixDLT\Types\Core\String_;
+use Techworker\RadixDLT\Types\Primitives\Address;
+use Techworker\RadixDLT\Types\Primitives\String_;
 
 class ParticleIndex
 {

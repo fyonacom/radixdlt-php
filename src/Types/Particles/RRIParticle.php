@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles;
 
-use Techworker\RadixDLT\Types\Core\RRI;
+use Techworker\RadixDLT\Types\Primitives\RRI;
 
 class RRIParticle extends AbstractParticle
 {

@@ -5,4 +5,3 @@ node_modules
 test.php
 coverage
 .phpunit.result.cache
-test.php

@@ -24,7 +24,10 @@ class Serializer
 {
     public static function primitiveToDson(array $bytes, int $prefix): string
     {
-        array_unshift($bytes, $prefix);
+        if($prefix !== -1) {
+            array_unshift($bytes, $prefix);
+        }
+
         return bytesToBinary($bytes);
     }
 
@@ -54,9 +57,11 @@ class Serializer
         }
 
         $bytes = binaryToBytes($decoded);
-        $prefix = array_shift($bytes);
-        if ($prefix !== $checkPrefix) {
-            throw new InvalidArgumentException('Invalid DSON prefix.');
+        if($checkPrefix !== -1) {
+            $prefix = array_shift($bytes);
+            if ($prefix !== $checkPrefix) {
+                throw new InvalidArgumentException('Invalid DSON prefix.');
+            }
         }
 
         return $bytes;

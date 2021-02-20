@@ -9,10 +9,10 @@ test:
 	docker-compose run php ash -c "composer run test"
 
 check-style:
-	docker-compose run php ash -c "composer run ecs-check"
+	docker-compose run php ash -c "composer run style-check"
 
 fix-style:
-	docker-compose run php ash -c "composer run ecs-fix"
+	docker-compose run php ash -c "composer run style-fix"
 
 psalm:
 	docker-compose run php ash -c "composer run psalm"

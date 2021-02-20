@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT\Types;
 
 use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
-use Techworker\RadixDLT\Types\Core\String_;
 use Techworker\RadixDLT\Types\Particles\ParticleGroup;
+use Techworker\RadixDLT\Types\Primitives\String_;
 
 class Atom implements FromJsonInterface
 {
@@ -33,6 +33,7 @@ class Atom implements FromJsonInterface
             'signatures' => [],
         ];
         $data['message'] = String_::fromJson($json['message']);
+        /** @var array $json['particleGroups'] */
         foreach ($json['particleGroups'] as $group) {
             $data['particleGroups'][] = ParticleGroup::fromJson($group);
         }

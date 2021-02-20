@@ -14,18 +14,18 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT\Types\Particles\Tokens;
 
 use BN\BN;
-use Techworker\RadixDLT\Types\Core\Address;
-use Techworker\RadixDLT\Types\Core\EUID;
-use Techworker\RadixDLT\Types\Core\RRI;
-use Techworker\RadixDLT\Types\Core\String_;
-use Techworker\RadixDLT\Types\Core\UInt256;
 use Techworker\RadixDLT\Types\Particles\AbstractParticle;
+use Techworker\RadixDLT\Types\Primitives\Address;
+use Techworker\RadixDLT\Types\Primitives\RRI;
+use Techworker\RadixDLT\Types\Primitives\String_;
+use Techworker\RadixDLT\Types\Primitives\UID;
+use Techworker\RadixDLT\Types\Primitives\UInt256;
 
 class TransferrableTokensParticle extends AbstractParticle implements OwnableInterface
 {
     protected function __construct(
         protected int $version,
-        protected EUID $hid,
+        protected UID $hid,
         protected array $destinations,
         protected RRI $rri,
         protected String_ $name,
@@ -47,7 +47,7 @@ class TransferrableTokensParticle extends AbstractParticle implements OwnableInt
 
     public function getSymbol(): string
     {
-        return $this->rri->getName();
+        return $this->rri->getSymbol();
     }
 
     public function getAddresses(): array
@@ -62,11 +62,11 @@ class TransferrableTokensParticle extends AbstractParticle implements OwnableInt
         }
 
         $version = (int) $json['version'];
-        $hid = EUID::fromJson((string) $json['hid']);
+        $hid = UID::fromJson((string) $json['hid']);
         $destinations = [];
         /** @var string $destination */
         foreach ($json['destinations'] as $destination) {
-            $destinations[] = EUID::fromJson("${destination}");
+            $destinations[] = UID::fromJson("${destination}");
         }
         $rri = RRI::fromJson((string) $json['rri']);
         $name = String_::fromJson((string) $json['name']);
@@ -96,7 +96,7 @@ class TransferrableTokensParticle extends AbstractParticle implements OwnableInt
         $json['serializer'] = 'radix.particles.fixed_supply_token_definition';
         $json['version'] = $this->version;
         $json['hid'] = $this->hid->toJson();
-        $json['destinations'] = array_map(fn (EUID $uid) => $uid->toJson(), $this->destinations);
+        $json['destinations'] = array_map(fn (UID $uid) => $uid->toJson(), $this->destinations);
         $json['rri'] = $this->rri->toJson();
         $json['name'] = $this->name->toJson();
         $json['description'] = $this->description->toJson();

@@ -13,11 +13,12 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Universe;
 
-use Techworker\RadixDLT\Types\Core\Bytes;
-use Techworker\RadixDLT\Types\Core\EUID;
-use Techworker\RadixDLT\Types\Core\String_;
+use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
+use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
+use Techworker\RadixDLT\Types\Primitives\Bytes;
+use Techworker\RadixDLT\Types\Primitives\String_;
 
-final class UniverseConfig
+final class UniverseConfig implements FromJsonInterface, ToJsonInterface
 {
     public const TYPE_PRODUCTION = 0;
 
@@ -29,64 +30,54 @@ final class UniverseConfig
 
     private function __construct(
         protected int $magic,
-        protected EUID $hid,
         protected Bytes $creator,
+        protected int $port,
         protected Bytes $signatureR,
         protected Bytes $signatureS,
         protected String_ $name,
         protected String_ $description,
         protected int $type,
-        protected int $version,
-        protected int $port,
         protected int $timestamp,
         protected array $genesis
     ) {
         $this->magicByte = $this->magic & 0xff;
     }
 
-    public static function fromArray(array $json)
-    {
-    }
-
-    public static function fromJson(array | string $json): self
+    public static function fromJson(array | string $json): static
     {
         if (is_string($json)) {
-            throw new \InvalidArgumentException('UniverseConfig needs an array');
+            $json = (array) json_decode($json, true);
         }
 
-        $genesis = [];
         $data = [];
         $data['magic'] = (int) $json['magic'];
-        $data['hid'] = EUID::fromJson((string) $json['hid']);
         $data['creator'] = Bytes::fromJson((string) $json['creator']);
+        $data['port'] = (int) $json['port'];
         $data['signatureR'] = Bytes::fromJson((string) $json['signature.r']);
         $data['signatureS'] = Bytes::fromJson((string) $json['signature.s']);
         $data['name'] = String_::fromJson((string) $json['name']);
         $data['description'] = String_::fromJson((string) $json['description']);
         $data['type'] = (int) $json['type'];
-        $data['version'] = (int) $json['version'];
-        $data['port'] = (int) $json['port'];
         $data['timestamp'] = (int) $json['timestamp'];
-        $data['genesis'] = $genesis;
+        $data['genesis'] = [];
 
         return new self(...$data);
     }
 
     public function toJson(): array | string
     {
-        $json = [];
-        $json['magic'] = $this->magic;
-        $json['hid'] = $this->hid->toJson();
-        $json['creator'] = $this->creator->toJson();
-        $json['signatureR'] = $this->signatureR->toJson();
-        $json['signatureS'] = $this->signatureS->toJson();
-        $json['name'] = $this->name->toJson();
-        $json['description'] = $this->description->toJson();
-        $json['type'] = $this->type;
-        $json['version'] = $this->version;
-        $json['port'] = $this->port;
-        $json['timestamp'] = $this->timestamp;
-        $json['genesis'] = $this->genesis;
-        return $json;
+        $data = [];
+        $data['magic'] = $this->magic;
+        $data['creator'] = $this->creator->toJson();
+        $data['port'] = $this->port;
+        $data['signatureR'] = $this->signatureR->toJson();
+        $data['signatureS'] = $this->signatureS->toJson();
+        $data['name'] = $this->name->toJson();
+        $data['description'] = $this->description->toJson();
+        $data['type'] = $this->type;
+        $data['timestamp'] = $this->timestamp;
+        $data['genesis'] = [];
+
+        return $data;
     }
 }

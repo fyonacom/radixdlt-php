@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Techworker\RadixDLT\Types\Core;
+namespace Techworker\RadixDLT\Types\Primitives;
 
 use CBOR\AbstractCBORObject;
 use CBOR\ByteStringObject;
@@ -38,7 +38,7 @@ class Address extends BytesBasedObject implements
      */
     protected array $hash;
 
-    protected EUID $uid;
+    protected UID $uid;
 
     protected KeyPair $keyPair;
 
@@ -75,7 +75,7 @@ class Address extends BytesBasedObject implements
         }
 
         $this->hash = radixHash($this->getPublicKey()->toBytes());
-        $this->uid = EUID::fromBytes(array_slice($this->hash, 0, 16));
+        $this->uid = UID::fromBytes(array_slice($this->hash, 0, 16));
     }
 
     /**
@@ -199,7 +199,7 @@ class Address extends BytesBasedObject implements
     /**
      * Gets the related UID.
      */
-    public function getUID(): EUID
+    public function getUID(): UID
     {
         return $this->uid;
     }

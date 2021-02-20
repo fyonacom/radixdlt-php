@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT\Types\Crypto;
 
 use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
-use Techworker\RadixDLT\Types\Core\Bytes;
+use Techworker\RadixDLT\Types\Primitives\Bytes;
 
 class ECDSASignature
 {

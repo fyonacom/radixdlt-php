@@ -1,13 +1,13 @@
 <?php
 
-namespace Techworker\RadixDLT\Tests\Unit\Types\Core;
+namespace Techworker\RadixDLT\Tests\Unit\Types\Primitives;
 
 use Techworker\RadixDLT\Crypto\Keys\Curves\Secp256k1;
 use Techworker\RadixDLT\Crypto\Keys\KeyPair;
 use Techworker\RadixDLT\Crypto\Keys\PrivateKey;
 use Techworker\RadixDLT\Crypto\Keys\PublicKey;
 use Techworker\RadixDLT\Tests\TestCase;
-use Techworker\RadixDLT\Types\Core\Address;
+use Techworker\RadixDLT\Types\Primitives\Address;
 
 class AddressTest extends TestCase
 {
@@ -160,7 +160,7 @@ class AddressTest extends TestCase
         }
 
         $this->assertSame(self::ADDRESS['uid'], $address->getUID()->toHex());
-        $this->assertSame(self::ADDRESS['shard'], $address->getUID()->getShard('hex'));
+        $this->assertSame(self::ADDRESS['shard'], $address->getUID()->getShard()->toString(16));
         $this->assertSame($universe, $address->getUniverseMagicByte());
     }
 }

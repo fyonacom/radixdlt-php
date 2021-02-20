@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Techworker\RadixDLT\Types\Core;
+namespace Techworker\RadixDLT\Types\Primitives;
 
 use CBOR\AbstractCBORObject;
 use CBOR\ByteStringObject;
@@ -23,88 +23,84 @@ use Techworker\RadixDLT\Serialization\Serializer;
 use Techworker\RadixDLT\Types\BytesBasedObject;
 
 /**
- * Class EUID
- * @package Techworker\RadixDLT\Types\Core
+ * Class RRI
+ * @package Techworker\RadixDLT\Types\Primitives
  */
-class EUID extends BytesBasedObject implements
+class RRI extends BytesBasedObject implements
     FromJsonInterface,
     ToJsonInterface,
     FromDsonInterface,
     ToDsonInterface
 {
-    /**
-     * Shard bytes (first 8 bytes)
-     *
-     * @var int[]
-     */
-    protected array $shard;
+    protected Address $address;
+
+    protected string $symbol;
 
     /**
-     * EUID constructor.
+     * RRI constructor.
+     *
      * @param int[] $bytes
      */
     public function __construct(array $bytes)
     {
         parent::__construct($bytes);
-        $this->shard = array_slice($this->bytes, 0, 8);
+        $rriString = $this->toBinary();
+        $parts = explode('/', ltrim($rriString, '/'));
+        if (count($parts) !== 2) {
+            throw new \InvalidArgumentException(
+                'RRI must be of the format /:address/:unique'
+            );
+        }
+
+        $this->address = Address::fromBase58($parts[0]);
+        $this->symbol = $parts[1];
     }
 
     public function __toString(): string
     {
-        return $this->toHex();
+        return $this->toBinary();
     }
 
-    public static function getDefaultEncoding(): string
+    public function getAddress(): Address
     {
-        return 'hex';
+        return $this->address;
     }
 
-    /**
-     * Gets the shard.
-     *
-     * @return int[]|string
-     */
-    public function getShard(string $enc = null): array | string
+    public function getSymbol(): string
     {
-        return bytesToEnc($this->shard, $enc ?? 'hex');
+        return $this->symbol;
     }
 
-    /**
-     * Creates a new UID instance from the given number
-     * @return EUID
-     * @throws \Exception
-     */
-    public static function fromInt(int $number): self
+    public static function fromAddressAndSymbol(Address $address, string $symbol): self
     {
-        $bytes = array_fill(0, 16, 0);
-        writeUInt32BE($bytes, $number, 12);
-
-        return parent::from($bytes);
+        return self::fromBinary(
+            sprintf('/%s/%s', (string)$address, $symbol)
+        );
     }
 
     public static function fromJson(array | string $json): static
     {
-        return new static(hexToBytes(
-            Serializer::primitiveFromJson($json, ':uid:')
+        return new static(binaryToBytes(
+            Serializer::primitiveFromJson($json, ':rri:')
         ));
     }
 
     public function toJson(): string | array
     {
-        return Serializer::primitiveToJson($this, ':uid:');
+        return Serializer::primitiveToJson($this, ':rri:');
     }
 
     public static function fromDson(array | string | AbstractCBORObject $dson): static
     {
         return new static(
-            Serializer::primitiveFromDson($dson, 2)
+            Serializer::primitiveFromDson($dson, 6)
         );
     }
 
     public function toDson(): ByteStringObject
     {
         return new ByteStringObject(
-            Serializer::primitiveToDson($this->bytes, 2)
+            Serializer::primitiveToDson($this->bytes, 6)
         );
     }
 }

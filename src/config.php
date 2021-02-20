@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT;
 
 use Techworker\RadixDLT\Crypto\Keys\Adapters\OpenSSL;
+use Techworker\RadixDLT\Crypto\Keys\Adapters\SimplitoElliptic;
 use Techworker\RadixDLT\Crypto\Keys\Curves\Secp256k1;
 
 return [
@@ -32,6 +33,8 @@ return [
                     'private_key_type' => OPENSSL_KEYTYPE_EC,
                     'curve_name' => 'secp256k1',
                 ],
+            ],
+            SimplitoElliptic::class => [
             ],
         ],
     ],

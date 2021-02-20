@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles;
 
-use Techworker\RadixDLT\Types\Core\Address;
+use Techworker\RadixDLT\Types\Primitives\Address;
 
 /**
  * Class Particle

@@ -11,10 +11,11 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Techworker\RadixDLT\Types\Core;
+namespace Techworker\RadixDLT\Types\Primitives;
 
 use CBOR\AbstractCBORObject;
 use CBOR\ByteStringObject;
+use InvalidArgumentException;
 use Techworker\RadixDLT\Serialization\Interfaces\FromDsonInterface;
 use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
 use Techworker\RadixDLT\Serialization\Interfaces\ToDsonInterface;
@@ -23,84 +24,61 @@ use Techworker\RadixDLT\Serialization\Serializer;
 use Techworker\RadixDLT\Types\BytesBasedObject;
 
 /**
- * Class RRI
- * @package Techworker\RadixDLT\Types\Core
+ * Class AID
+ * @package Techworker\RadixDLT\Types\Primitives
  */
-class RRI extends BytesBasedObject implements
+class AID extends BytesBasedObject implements
     FromJsonInterface,
     ToJsonInterface,
     FromDsonInterface,
     ToDsonInterface
 {
-    protected Address $address;
-
-    protected string $name;
+    public const BYTES = 32;
 
     /**
-     * RRI constructor.
+     * AID constructor.
      *
      * @param int[] $bytes
      */
     public function __construct(array $bytes)
     {
         parent::__construct($bytes);
-        $rriString = $this->toBinary();
-        $parts = explode('/', ltrim($rriString, '/'));
-        if (count($parts) !== 2) {
-            throw new \InvalidArgumentException(
-                'RRI must be of the format /:address/:unique'
+
+        if (count($bytes) !== self::BYTES) {
+            throw new InvalidArgumentException(
+                'AID length !== ' . self::BYTES . ', is ' . count($bytes)
             );
         }
-
-        $this->address = Address::fromBase58($parts[0]);
-        $this->name = $parts[1];
     }
 
     public function __toString(): string
     {
-        return $this->toBinary();
-    }
-
-    public function getAddress(): Address
-    {
-        return $this->address;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public static function fromAddressAndSymbol(Address $address, String_ $symbol): self
-    {
-        return self::fromBinary(
-            sprintf('/%s/%s', $address->toBinary(), $symbol->toBinary())
-        );
+        return $this->toHex();
     }
 
     public static function fromJson(array | string $json): static
     {
-        return new static(binaryToBytes(
-            Serializer::primitiveFromJson($json, ':rri:')
+        return new static(hexToBytes(
+            Serializer::primitiveFromJson($json, ':aid:')
         ));
     }
 
     public function toJson(): string | array
     {
-        return Serializer::primitiveToJson($this, ':rri:');
+        return Serializer::primitiveToJson($this, ':aid:');
     }
 
     public static function fromDson(array | string | AbstractCBORObject $dson): static
     {
         return new static(
-            Serializer::primitiveFromDson($dson, 6)
+            Serializer::primitiveFromDson($dson, 8)
         );
     }
 
     public function toDson(): ByteStringObject
     {
         return new ByteStringObject(
-            Serializer::primitiveToDson($this->bytes, 6)
+            Serializer::primitiveToDson($this->bytes, 8)
         );
     }
 }
