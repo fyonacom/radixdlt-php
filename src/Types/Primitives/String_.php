@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT\Types\Primitives;
 
 use CBOR\AbstractCBORObject;
-use CBOR\ByteStringObject;
 use CBOR\TextStringObject;
 use Techworker\RadixDLT\Serialization\Interfaces\FromDsonInterface;
 use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;

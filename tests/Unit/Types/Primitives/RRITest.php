@@ -4,9 +4,7 @@ namespace Techworker\RadixDLT\Tests\Unit\Types\Primitives;
 
 use Techworker\RadixDLT\Tests\TestCase;
 use Techworker\RadixDLT\Types\Primitives\Address;
-use Techworker\RadixDLT\Types\Primitives\AID;
 use Techworker\RadixDLT\Types\Primitives\RRI;
-use Techworker\RadixDLT\Types\Primitives\String_;
 
 class RRITest extends TestCase
 {
@@ -18,11 +16,11 @@ class RRITest extends TestCase
             87,  57, 105, 120,  71,  55, 101, 118,  97, 121,  50,
             114, 103,  65, 104,  86,  84, 112, 112,  97,  85, 107,
             118,  97, 121,  74,  50, 114,  49,  87, 115, 122,  80,
-            47,  88,  82,  68
+            47,  88,  82,  68,
         ],
         'str' => '/JH3BuQw985MrbEdrNvW9ixG7evay2rgAhVTppaUkvayJ2r1WszP/XRD',
         'symbol' => 'XRD',
-        'address' => 'JH3BuQw985MrbEdrNvW9ixG7evay2rgAhVTppaUkvayJ2r1WszP'
+        'address' => 'JH3BuQw985MrbEdrNvW9ixG7evay2rgAhVTppaUkvayJ2r1WszP',
     ];
 
     public function testFromJson()
@@ -43,7 +41,8 @@ class RRITest extends TestCase
         $this->compareToFixture($rri);
     }
 
-    public function testFromAddressAndSymbol() {
+    public function testFromAddressAndSymbol()
+    {
         $rri = RRI::fromAddressAndSymbol(
             Address::fromJson(':adr:' . self::RRI['address']),
             self::RRI['symbol']

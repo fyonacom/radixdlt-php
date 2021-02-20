@@ -3,7 +3,6 @@
 namespace Techworker\RadixDLT\Tests\Unit\Types\Primitives;
 
 use Techworker\RadixDLT\Tests\TestCase;
-use Techworker\RadixDLT\Types\Primitives\AID;
 use Techworker\RadixDLT\Types\Primitives\String_;
 
 class String_Test extends TestCase
@@ -13,7 +12,7 @@ class String_Test extends TestCase
         'dson' => [
             106, 116, 101,  99,
             104, 119, 111, 114,
-            107, 101, 114
+            107, 101, 114,
         ],
         'str' => 'techworker',
     ];

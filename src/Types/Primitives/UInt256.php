@@ -37,11 +37,12 @@ class UInt256 extends BytesBasedObject implements
 
     /**
      * UInt256 constructor.
+     * @param int[] $bytes
      * @throws \Exception
      */
     public function __construct(array $bytes)
     {
-        if(count($bytes) !== 32) {
+        if (count($bytes) !== 32) {
             throw new \InvalidArgumentException('Invalid uint32 length');
         }
 
@@ -49,9 +50,9 @@ class UInt256 extends BytesBasedObject implements
         $this->bn = new BN($bytes);
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
-        return (string)$this->bn->toString();
+        return (string) $this->bn->toString();
     }
 
     /**
@@ -62,7 +63,9 @@ class UInt256 extends BytesBasedObject implements
     public static function fromJson(array | string $json): static
     {
         $bn = new BN(Serializer::primitiveFromJson($json, ':u20:'));
-        return new static($bn->toArray('be', 32));
+        /** @var int[] $bytes */
+        $bytes = $bn->toArray('be', 32);
+        return new static($bytes);
     }
 
     /**

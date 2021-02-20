@@ -214,7 +214,9 @@ function radix(): \Techworker\RadixDLT\Radix
     return \Techworker\RadixDLT\Radix::getInstance();
 }
 
-
+/**
+ * @psalm-suppress MixedAssignment
+ */
 function arrayMergeRecursiveDistinct(array &$array1, array &$array2): array
 {
     $merged = $array1;
@@ -227,10 +229,10 @@ function arrayMergeRecursiveDistinct(array &$array1, array &$array2): array
         if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
             $merged[$key] = arrayMergeRecursiveDistinct($merged[$key], $value);
         } else {
-            /** @var mixed $merged */
             $merged[$key] = $value;
         }
     }
 
+    /** @var array */
     return $merged;
 }

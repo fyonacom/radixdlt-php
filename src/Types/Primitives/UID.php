@@ -41,7 +41,7 @@ class UID extends BytesBasedObject implements
      */
     public function __construct(array $bytes)
     {
-        if(count($bytes) !== 16) {
+        if (count($bytes) !== 16) {
             throw new \InvalidArgumentException('Bad length');
         }
 
@@ -57,8 +57,6 @@ class UID extends BytesBasedObject implements
 
     /**
      * Gets the shard.
-     *
-     * @return int[]|string
      */
     public function getShard(): BN
     {
@@ -68,8 +66,8 @@ class UID extends BytesBasedObject implements
     public static function fromJson(array | string $json): static
     {
         return new static(hexToBytes(
-                              Serializer::primitiveFromJson($json, ':uid:')
-                          ));
+            Serializer::primitiveFromJson($json, ':uid:')
+        ));
     }
 
     public function toJson(): string | array

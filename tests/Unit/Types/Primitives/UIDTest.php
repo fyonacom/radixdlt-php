@@ -34,7 +34,7 @@ class UIDTest extends TestCase
     public function testBadLength()
     {
         $this->expectException(\InvalidArgumentException::class);
-        new UID([1,2,3]);
+        new UID([1, 2, 3]);
     }
 
     protected function compareToFixture(UID $uid)

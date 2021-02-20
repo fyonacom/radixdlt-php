@@ -16,7 +16,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     // B. full sets
     $parameters = $containerConfigurator->parameters();
-    $parameters->set(Option::PATHS, [__DIR__ . '/src', __DIR__ . '/tests']);
+    $parameters->set(Option::PATHS, [__DIR__ . '/src']);
     $parameters->set(Option::SETS, [
         SetList::STRICT,
         SetList::COMMENTS,

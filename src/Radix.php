@@ -36,24 +36,28 @@ final class Radix implements ContainerInterface
      */
     private int $universeMagicByte = 0;
 
-    private static Radix $instance;
+    private static ?Radix $instance = null;
+
+    private ContainerInterface $innerContainer;
 
     /**
      * Radix constructor.
      * @param ContainerInterface|null $outerContainer
-     * @param ContainerInterface|null $innerContainer
      */
     private function __construct(
         protected ?ContainerInterface $outerContainer = null,
-        protected ?ContainerInterface $innerContainer = null,
+        ?ContainerInterface $innerContainer = null,
         array $config = [],
     ) {
         // TODO: merge..
+        /** @var array $baseConfig */
         $baseConfig = include __DIR__ . '/config.php';
         $config = arrayMergeRecursiveDistinct($baseConfig, $config);
 
-        if ($this->innerContainer === null) {
+        if ($innerContainer === null) {
             $this->innerContainer = new Container($config);
+        } else {
+            $this->innerContainer = $innerContainer;
         }
     }
 
@@ -73,7 +77,7 @@ final class Radix implements ContainerInterface
 
     public static function getInstance(): self
     {
-        if (! isset(self::$instance)) {
+        if (self::$instance === null) {
             throw new \BadMethodCallException('Call setup first...');
         }
 
@@ -95,9 +99,8 @@ final class Radix implements ContainerInterface
         // the outer container take precedence
         if ($this->outerContainer !== null && $this->outerContainer->has($id)) {
             return $this->outerContainer->get($id);
-        } elseif ($this->innerContainer->has($id)) {
-            return $this->innerContainer->get($id);
         }
+        return $this->innerContainer->get($id);
     }
 
     /**
@@ -109,6 +112,10 @@ final class Radix implements ContainerInterface
             ($this->outerContainer !== null && $this->outerContainer->has($id));
     }
 
+    /**
+     * @psalm-suppress MixedReturnStatement
+     * @psalm-suppress MixedInferredReturnType
+     */
     public function keyService(): KeyServiceInterface
     {
         return $this->get(KeyServiceInterface::class);

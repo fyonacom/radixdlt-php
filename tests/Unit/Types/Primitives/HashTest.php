@@ -4,7 +4,6 @@ namespace Techworker\RadixDLT\Tests\Unit\Types\Primitives;
 
 use Techworker\RadixDLT\Tests\TestCase;
 use Techworker\RadixDLT\Types\Primitives\Hash;
-use Techworker\RadixDLT\Types\Primitives\UID;
 
 class HashTest extends TestCase
 {
@@ -35,7 +34,7 @@ class HashTest extends TestCase
     public function testBadLength()
     {
         $this->expectException(\InvalidArgumentException::class);
-        new Hash([1,2,3]);
+        new Hash([1, 2, 3]);
     }
 
     protected function compareToFixture(Hash $hash)

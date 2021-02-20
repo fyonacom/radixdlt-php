@@ -37,14 +37,25 @@ class Container implements ContainerInterface
         $pimpleContainer[CurveResolver::class] = fn (): CurveResolver => new CurveResolver(
             (array) radixConfig('crypto.keys.supported')
         );
-        $pimpleContainer[KeyServiceInterface::class] = fn (\Pimple\Container $c): KeyService => new KeyService(
-            (array) radixConfig('crypto.keys.mapping'),
-            $c[CurveResolver::class]
-        );
-        $pimpleContainer[OpenSSL::class] = fn (\Pimple\Container $c): OpenSSL => new OpenSSL(
-            (array) radixConfig('crypto.keys', OpenSSL::class),
-            $c[CurveResolver::class]
-        );
+        $pimpleContainer[KeyServiceInterface::class] = function (\Pimple\Container $container): KeyService {
+
+            /** @var CurveResolver $resolver */
+            $resolver = $container->offsetGet(CurveResolver::class);
+            return new KeyService(
+                (array) radixConfig('crypto.keys.mapping'),
+                $resolver
+            );
+        };
+
+        $pimpleContainer[OpenSSL::class] = function (\Pimple\Container $container): OpenSSL {
+            /** @var CurveResolver $resolver */
+            $resolver = $container->offsetGet(CurveResolver::class);
+            return new OpenSSL(
+                (array) radixConfig('crypto.keys', OpenSSL::class),
+                $resolver
+            );
+        };
+
         $this->innerContainer = new PimplePsrContainer($pimpleContainer);
     }
 

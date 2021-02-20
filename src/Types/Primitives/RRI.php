@@ -74,7 +74,7 @@ class RRI extends BytesBasedObject implements
     public static function fromAddressAndSymbol(Address $address, string $symbol): self
     {
         return self::fromBinary(
-            sprintf('/%s/%s', (string)$address, $symbol)
+            sprintf('/%s/%s', (string) $address, $symbol)
         );
     }
 
