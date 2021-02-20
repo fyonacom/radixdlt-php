@@ -26,8 +26,7 @@ class Atom implements FromJsonInterface
     ) {
     }
 
-
-    public static function fromJson(array|string $json): static
+    public static function fromJson(array | string $json): static
     {
         $data = [
             'particleGroups' => [],

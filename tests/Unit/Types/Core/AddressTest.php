@@ -18,7 +18,7 @@ class AddressTest extends TestCase
             91, 139, 36,  16,  89, 247, 228,  1, 125,   9,
             132, 173, 62,  37,  89, 130, 152, 48,  58,   9,
             236, 122, 73, 221, 250, 237,  74, 71,  11,   3,
-            74
+            74,
         ],
         'str' => 'k1etbta7tKxA1EsL9kLW3Kf37ACdrjvkR5pDCgL9UfcYMsR1a7B',
         'publicKey' => '03581849ce655b8b241059f7e4017d0984ad3e25598298303a09ec7a49ddfaed4a',
@@ -60,27 +60,31 @@ class AddressTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid checksum for address');
         $address = base58ToBytes(self::ADDRESS['str']);
-        $address[count($address) - 1] += 1;
+        ++$address[count($address) - 1];
         Address::fromBytes($address);
     }
 
-    public function testToStringReturnsBase58() {
+    public function testToStringReturnsBase58()
+    {
         $address = Address::fromDson(self::ADDRESS['dson']);
-        $this->assertEquals(self::ADDRESS['str'], (string)$address);
+        $this->assertSame(self::ADDRESS['str'], (string) $address);
     }
 
-    public function testCanGenerateANewAddressWithUniverse() {
+    public function testCanGenerateANewAddressWithUniverse()
+    {
         $address = Address::generateNew(Secp256k1::class, 5);
-        $this->assertEquals(5, $address->getUniverseMagicByte());
+        $this->assertSame(5, $address->getUniverseMagicByte());
     }
 
-    public function testCanGenerateANewAddressWithoutUniverse() {
+    public function testCanGenerateANewAddressWithoutUniverse()
+    {
         $address = Address::generateNew(Secp256k1::class);
         // TODO: once the magic byte is from the connection this might fail
-        $this->assertEquals(0, $address->getUniverseMagicByte());
+        $this->assertSame(0, $address->getUniverseMagicByte());
     }
 
-    public function testFromKeyPairWithUniverse() {
+    public function testFromKeyPairWithUniverse()
+    {
         $kp = new KeyPair(
             PublicKey::fromHex(self::ADDRESS['publicKey']),
             PrivateKey::fromHex(self::ADDRESS['privateKey'])
@@ -89,52 +93,59 @@ class AddressTest extends TestCase
         $this->compareToFixture($address);
     }
 
-    public function testFromKeyPairWithoutUniverse() {
+    public function testFromKeyPairWithoutUniverse()
+    {
         $kp = new KeyPair(
             PublicKey::fromHex(self::ADDRESS['publicKey']),
             PrivateKey::fromHex(self::ADDRESS['privateKey'])
         );
         $address = Address::fromKeyPair($kp);
-        $this->assertEquals(0, $address->getUniverseMagicByte());
-        $this->assertEquals($kp->getPublicKey()->toHex(), $address->getPublicKey()->toHex());
-        $this->assertEquals($kp->getPrivateKey()->toHex(), $address->getPrivateKey()->toHex());
+        $this->assertSame(0, $address->getUniverseMagicByte());
+        $this->assertSame($kp->getPublicKey()->toHex(), $address->getPublicKey()->toHex());
+        $this->assertSame($kp->getPrivateKey()->toHex(), $address->getPrivateKey()->toHex());
         // we cannot compare with the fixture here, a different universe
         // changes the whole address
     }
 
-    public function testFromPublicKeyWithUniverse() {
+    public function testFromPublicKeyWithUniverse()
+    {
         $address = Address::fromPublicKey(PublicKey::fromHex(self::ADDRESS['publicKey']), 5);
         $this->compareToFixture($address);
     }
 
-    public function testFromPublicKeyWithoutUniverse() {
+    public function testFromPublicKeyWithoutUniverse()
+    {
         $address = Address::fromPublicKey(PublicKey::fromHex(self::ADDRESS['publicKey']));
-        $this->assertEquals(0, $address->getUniverseMagicByte());
-        $this->assertEquals(self::ADDRESS['publicKey'], $address->getPublicKey()->toHex());
+        $this->assertSame(0, $address->getUniverseMagicByte());
+        $this->assertSame(self::ADDRESS['publicKey'], $address->getPublicKey()->toHex());
         $this->assertNull($address->getPrivateKey());
     }
 
-    public function testFromPrivateKeyWithUniverse() {
+    public function testFromPrivateKeyWithUniverse()
+    {
         $address = Address::fromPrivateKey(PrivateKey::fromHex(self::ADDRESS['privateKey']), 5);
         $this->compareToFixture($address);
     }
 
-    public function testFromHexEncodedPrivateKey() {
+    public function testFromHexEncodedPrivateKey()
+    {
         $address = Address::fromPrivateKey(PrivateKey::fromHex(self::ADDRESS['privateKey']), 5, 'hex');
         $this->compareToFixture($address);
     }
 
-    public function testFromPrivateKeyWithoutUniverse() {
+    public function testFromPrivateKeyWithoutUniverse()
+    {
         $address = Address::fromPrivateKey(PrivateKey::fromHex(self::ADDRESS['privateKey']));
-        $this->assertEquals(0, $address->getUniverseMagicByte());
-        $this->assertEquals(self::ADDRESS['publicKey'], $address->getPublicKey()->toHex());
-        $this->assertEquals(self::ADDRESS['privateKey'], $address->getPrivateKey()->toHex());
+        $this->assertSame(0, $address->getUniverseMagicByte());
+        $this->assertSame(self::ADDRESS['publicKey'], $address->getPublicKey()->toHex());
+        $this->assertSame(self::ADDRESS['privateKey'], $address->getPrivateKey()->toHex());
     }
 
-    public function testFromHexEncodedPublicKey() {
+    public function testFromHexEncodedPublicKey()
+    {
         $kp = radix()->keyService()->generateNew(Secp256k1::class);
         $address = Address::fromPublicKey($kp->getPublicKey()->toHex(), 5, 'hex');
-        $this->assertEquals($kp->getPublicKey()->toHex(), $address->getPublicKey()->toHex());
+        $this->assertSame($kp->getPublicKey()->toHex(), $address->getPublicKey()->toHex());
     }
 
     protected function compareToFixture(Address $address, int $universe = self::ADDRESS['universe'])

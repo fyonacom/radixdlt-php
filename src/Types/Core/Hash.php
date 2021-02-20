@@ -18,9 +18,9 @@ use CBOR\ByteStringObject;
 use InvalidArgumentException;
 use Techworker\RadixDLT\Serialization\Interfaces\FromDsonInterface;
 use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\Serializer;
 use Techworker\RadixDLT\Serialization\Interfaces\ToDsonInterface;
 use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
+use Techworker\RadixDLT\Serialization\Serializer;
 use Techworker\RadixDLT\Types\BytesBasedObject;
 
 /**

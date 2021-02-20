@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT\Types\Particles\Tokens;
 
 use BN\BN;
-use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
 use Techworker\RadixDLT\Types\Core\Address;
 use Techworker\RadixDLT\Types\Core\EUID;
 use Techworker\RadixDLT\Types\Core\RRI;

@@ -60,8 +60,6 @@ class OpenSSL implements AdapterInterface
 
     /**
      * @param string|int[]|PublicKey $publicKey
-     * @param string|null $enc
-     * @return KeyPair
      */
     public function fromPublicKey(string | array | PublicKey $publicKey, ?string $enc = 'hex'): KeyPair
     {
@@ -111,15 +109,15 @@ class OpenSSL implements AdapterInterface
         // compressed..
         /** @var array $ecKey */
         $ecKey = $keyDetails['ec'];
-        $pubX = binaryToBytes((string)$ecKey['x']);
-        $pubY = binaryToBytes((string)$ecKey['y']);
+        $pubX = binaryToBytes((string) $ecKey['x']);
+        $pubY = binaryToBytes((string) $ecKey['y']);
         if ($pubY[count($pubY) - 1] % 2 === 0) {
             array_unshift($pubX, 0x02);
         } else {
             array_unshift($pubX, 0x03);
         }
 
-        $privateKey = PrivateKey::fromBinary((string)$ecKey['d']);
+        $privateKey = PrivateKey::fromBinary((string) $ecKey['d']);
         $publicKey = PublicKey::fromBytes($pubX);
         return new KeyPair($publicKey, $privateKey);
     }

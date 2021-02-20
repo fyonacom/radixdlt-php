@@ -24,12 +24,6 @@ class PrivateKey extends BytesBasedObject
 {
     protected string $curve;
 
-    public function __toString() : string
-    {
-        return $this->toHex();
-    }
-
-
     /**
      * PrivateKey constructor.
      * @param int[] $bytes
@@ -49,6 +43,11 @@ class PrivateKey extends BytesBasedObject
         if ($diffExpectedLength > 0) {
             array_unshift($this->bytes, ...array_fill(0, $diffExpectedLength, 0));
         }
+    }
+
+    public function __toString(): string
+    {
+        return $this->toHex();
     }
 
     /**

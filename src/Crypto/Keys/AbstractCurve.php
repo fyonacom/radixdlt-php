@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Crypto\Keys;
 
-/**
- * Class AbstractCurve
- */
+
 abstract class AbstractCurve
 {
     /**

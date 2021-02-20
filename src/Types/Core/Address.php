@@ -22,9 +22,9 @@ use Techworker\RadixDLT\Crypto\Keys\PrivateKey;
 use Techworker\RadixDLT\Crypto\Keys\PublicKey;
 use Techworker\RadixDLT\Serialization\Interfaces\FromDsonInterface;
 use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\Serializer;
 use Techworker\RadixDLT\Serialization\Interfaces\ToDsonInterface;
 use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
+use Techworker\RadixDLT\Serialization\Serializer;
 use Techworker\RadixDLT\Types\BytesBasedObject;
 
 class Address extends BytesBasedObject implements

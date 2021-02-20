@@ -148,7 +148,6 @@ abstract class BytesBasedObject implements Stringable
      * Initializes a new instance.
      *
      * @param string|int[] $data
-     * @return self
      */
     public static function from(string | array $data, string $enc, mixed ...$args): self
     {

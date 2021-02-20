@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Universe;
 
-use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
 use Techworker\RadixDLT\Types\Core\Bytes;
 use Techworker\RadixDLT\Types\Core\EUID;
 use Techworker\RadixDLT\Types\Core\String_;

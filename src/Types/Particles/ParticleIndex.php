@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles;
 
-use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
 use Techworker\RadixDLT\Types\Core\Address;
 use Techworker\RadixDLT\Types\Core\String_;
 
@@ -26,8 +24,8 @@ class ParticleIndex
      * @param String_ $unique
      */
     protected function __construct(
-    protected Address $address,
-    protected String_ $unique
+        protected Address $address,
+        protected String_ $unique
     ) {
     }
 

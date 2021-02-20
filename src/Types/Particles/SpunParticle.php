@@ -13,9 +13,6 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles;
 
-use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
-
 /**
  * Class RadixSpunParticle
  * @package Techworker\RadixDLT\Types\Particles

@@ -44,6 +44,11 @@ class UInt256 extends BytesBasedObject implements
         $this->bn = new BN($bytes);
     }
 
+    public function __toString()
+    {
+        return 'ABC';
+    }
+
     /**
      * @param array|string $json
      * @return static
@@ -68,20 +73,13 @@ class UInt256 extends BytesBasedObject implements
         return $this->bn;
     }
 
-    public function __toString()
+    public static function fromDson(array | string | AbstractCBORObject $dson): static
     {
-        return 'ABC';
-    }
-
-    public static function fromDson(array|string|AbstractCBORObject $dson): static
-    {
-        return new static([1,2,3]);
+        return new static([1, 2, 3]);
     }
 
     public function toDson(): ByteStringObject
     {
         return new ByteStringObject('ABC');
     }
-
-
 }

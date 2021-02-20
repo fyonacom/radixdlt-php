@@ -227,7 +227,7 @@ function arrayMergeRecursiveDistinct(array &$array1, array &$array2): array
         if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
             $merged[$key] = arrayMergeRecursiveDistinct($merged[$key], $value);
         } else {
-            /** @var mixed */
+            /** @var mixed $merged */
             $merged[$key] = $value;
         }
     }

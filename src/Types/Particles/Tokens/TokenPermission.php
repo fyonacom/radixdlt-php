@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles\Tokens;
 
-use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
 use Techworker\RadixDLT\Types\Core\String_;
 
 class TokenPermission

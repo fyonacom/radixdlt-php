@@ -46,7 +46,7 @@ class SimplitoElliptic implements AdapterInterface
         /** @var AbstractCurve $curve */
         $ec = new EC($curve::getName());
 
-        /** @var EC\KeyPair */
+        /** @var EC\KeyPair $libKeyPair */
         $libKeyPair = $ec->genKeyPair();
         return self::libKeyPairToKeyPair($libKeyPair);
     }
@@ -81,7 +81,7 @@ class SimplitoElliptic implements AdapterInterface
         /** @var AbstractCurve $curve */
         $ec = new EC($curve::getName());
 
-        /** @var EC\KeyPair */
+        /** @var EC\KeyPair $libKeyPair */
         $libKeyPair = $ec->keyFromPrivate($bytes);
         return self::libKeyPairToKeyPair($libKeyPair);
     }

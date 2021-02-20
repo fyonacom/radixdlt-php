@@ -37,7 +37,7 @@
     },
     "scripts": {
         "test": "./vendor/bin/phpunit --coverage-html coverage --testdox",
-        "style-check": "./vendor/bin/ecs check",
+        "style-check": "XDEBUG_MODE=off ./vendor/bin/ecs check",
         "style-fix": "./vendor/bin/ecs check --fix",
         "psalm": "XDEBUG_MODE=off ./vendor/bin/psalm"
     }
