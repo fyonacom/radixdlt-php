@@ -13,15 +13,17 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Crypto\Keys;
 
-use Techworker\RadixDLT\Types\BytesBasedObject;
+use Techworker\RadixDLT\Types\BytesTrait;
 
 /**
  * Class PrivateKey
  *
  * @package Techworker\RadixDLT\Crypto
  */
-class PrivateKey extends BytesBasedObject
+class PrivateKey
 {
+    use BytesTrait;
+
     protected string $curve;
 
     /**
@@ -30,7 +32,7 @@ class PrivateKey extends BytesBasedObject
      */
     protected function __construct(array $bytes)
     {
-        parent::__construct($bytes);
+        $this->initBytes($bytes);
 
         /** @var CurveResolver $curveResolver */
         $curveResolver = radix()->get(CurveResolver::class);
@@ -38,7 +40,7 @@ class PrivateKey extends BytesBasedObject
 
         /** @var AbstractCurve $curve */
         $curve = $this->curve;
-        $diffExpectedLength = $curve::getPrivateKeyLengths()[0] - count($bytes);
+        $diffExpectedLength = $curve::getPrivateKeyLengths()[0] - $this->countBytes();
         // https://stackoverflow.com/questions/62938091/why-are-secp256k1-privatekeys-not-always-32-bytes-in-nodejs
         if ($diffExpectedLength > 0) {
             array_unshift($this->bytes, ...array_fill(0, $diffExpectedLength, 0));

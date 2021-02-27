@@ -16,7 +16,7 @@ use Tuupola\Base58;
 /**
  * @return int[]
  */
-function radixHash(array $data, int $offset = 0, int $length = 0): array
+function radixHash(array $data, int $offset = 0, int $length = 0): \Techworker\RadixDLT\Types\Primitives\Hash
 {
     if ($offset !== 0) {
         $data = array_slice($data, $offset, $length);
@@ -29,7 +29,7 @@ function radixHash(array $data, int $offset = 0, int $length = 0): array
         $last = hash_final($context, true);
     }
 
-    return binaryToBytes($last);
+    return new \Techworker\RadixDLT\Types\Primitives\Hash(binaryToBytes($last));
 }
 
 /**
@@ -84,6 +84,15 @@ function stringToHex(string $string): string
 function bytesToHex(array $bytes): string
 {
     return stringToHex(bytesToBinary($bytes));
+}
+
+function bytesToFormattedHex(array $bytes): string
+{
+    $res = '';
+    foreach ($bytes as $byte) {
+        $res .= ' 0x' . strtoupper(stringToHex(bytesToBinary([$byte])));
+    }
+    return trim($res);
 }
 
 

@@ -16,7 +16,7 @@ namespace Techworker\RadixDLT\Types\Particles;
 use Techworker\RadixDLT\Types\Primitives\Address;
 use Techworker\RadixDLT\Types\Primitives\String_;
 
-class UniqueParticle extends AbstractParticle
+class UniqueParticle extends Particle
 {
     /**
      * UniqueParticle constructor.

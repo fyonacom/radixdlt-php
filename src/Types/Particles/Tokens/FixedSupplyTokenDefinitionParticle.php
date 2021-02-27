@@ -14,14 +14,14 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT\Types\Particles\Tokens;
 
 use BN\BN;
-use Techworker\RadixDLT\Types\Particles\AbstractParticle;
+use Techworker\RadixDLT\Types\Particles\Particle;
 use Techworker\RadixDLT\Types\Primitives\Address;
 use Techworker\RadixDLT\Types\Primitives\RRI;
 use Techworker\RadixDLT\Types\Primitives\String_;
 use Techworker\RadixDLT\Types\Primitives\UID;
 use Techworker\RadixDLT\Types\Primitives\UInt256;
 
-class FixedSupplyTokenDefinitionParticle extends AbstractParticle
+class FixedSupplyTokenDefinitionParticle extends Particle
 {
     protected function __construct(
         protected int $version,

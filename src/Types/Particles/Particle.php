@@ -19,9 +19,10 @@ use Techworker\RadixDLT\Types\Primitives\Address;
  * Class Particle
  * @package Techworker\RadixDLT\Types\Particles
  */
-abstract class AbstractParticle
+abstract class Particle
 {
-    public function getAddresses(): array {
+    public function getAddresses(): array
+    {
         return [];
     }
 

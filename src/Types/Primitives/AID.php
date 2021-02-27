@@ -13,26 +13,26 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Primitives;
 
-use CBOR\AbstractCBORObject;
-use CBOR\ByteStringObject;
 use InvalidArgumentException;
-use Techworker\RadixDLT\Serialization\Interfaces\FromDsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\ToDsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
-use Techworker\RadixDLT\Serialization\Serializer;
-use Techworker\RadixDLT\Types\BytesBasedObject;
+use Techworker\RadixDLT\Serialization\Attributes\Dson;
+use Techworker\RadixDLT\Serialization\Attributes\Encoding;
+use Techworker\RadixDLT\Serialization\Attributes\JsonPrimitive;
+use Techworker\RadixDLT\Serialization\EncodingType;
+use Techworker\RadixDLT\Types\BytesTrait;
+use Techworker\RadixDLT\Types\Primitive;
 
 /**
  * Class AID
  * @package Techworker\RadixDLT\Types\Primitives
  */
-class AID extends BytesBasedObject implements
-    FromJsonInterface,
-    ToJsonInterface,
-    FromDsonInterface,
-    ToDsonInterface
+#[Dson(majorType: 2, prefix: 8, property: 'aid')]
+#[JsonPrimitive(prefix: ':aid:', property: 'aid')]
+#[Encoding(encoding: EncodingType::HEX)]
+
+class AID extends Primitive
 {
+    use BytesTrait;
+
     public const BYTES = 32;
 
     /**
@@ -44,41 +44,10 @@ class AID extends BytesBasedObject implements
     {
         parent::__construct($bytes);
 
-        if (count($bytes) !== self::BYTES) {
+        if ($this->countBytes() !== self::BYTES) {
             throw new InvalidArgumentException(
-                'AID length !== ' . self::BYTES . ', is ' . count($bytes)
+                'AID length !== ' . self::BYTES . ', is ' . $this->countBytes()
             );
         }
-    }
-
-    public function __toString(): string
-    {
-        return $this->toHex();
-    }
-
-    public static function fromJson(array | string $json): static
-    {
-        return new static(hexToBytes(
-            Serializer::primitiveFromJson($json, ':aid:')
-        ));
-    }
-
-    public function toJson(): string | array
-    {
-        return Serializer::primitiveToJson($this, ':aid:');
-    }
-
-    public static function fromDson(array | string | AbstractCBORObject $dson): static
-    {
-        return new static(
-            Serializer::primitiveFromDson($dson, 8)
-        );
-    }
-
-    public function toDson(): ByteStringObject
-    {
-        return new ByteStringObject(
-            Serializer::primitiveToDson($this->bytes, 8)
-        );
     }
 }

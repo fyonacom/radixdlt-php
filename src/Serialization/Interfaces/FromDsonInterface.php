@@ -13,15 +13,15 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Serialization\Interfaces;
 
-use CBOR\AbstractCBORObject;
+use CBOR\CBORObject;
 
 interface FromDsonInterface
 {
     /**
      * Tries to return a new instance of the implementing class from the given dson.
      *
-     * @param array|string|AbstractCBORObject $dson
+     * @param array|string|CBORObject $dson
      * @return static
      */
-    public static function fromDson(array | string | AbstractCBORObject $dson): static;
+    public static function fromDson(array | string | CBORObject $dson, string $enc = 'bin'): static;
 }

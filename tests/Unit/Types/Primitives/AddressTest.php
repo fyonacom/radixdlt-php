@@ -153,13 +153,13 @@ class AddressTest extends TestCase
         $this->assertSame(self::ADDRESS['json'], $address->toJson());
         $this->assertSame(self::ADDRESS['dson'], binaryToBytes((string) $address->toDson()));
         $this->assertSame(self::ADDRESS['str'], $address->toBase58());
-        $this->assertSame(self::ADDRESS['hash'], $address->getHash('hex'));
+        $this->assertSame(self::ADDRESS['hash'], (string)$address->getHash());
         $this->assertSame(self::ADDRESS['publicKey'], $address->getPublicKey()->toHex());
         if ($address->getPrivateKey() !== null) {
             $this->assertSame(self::ADDRESS['privateKey'], $address->getPrivateKey()->toHex());
         }
 
-        $this->assertSame(self::ADDRESS['uid'], $address->getUID()->toHex());
+        $this->assertSame(self::ADDRESS['uid'], (string)$address->getUID());
         $this->assertSame(self::ADDRESS['shard'], $address->getUID()->getShard()->toString(16));
         $this->assertSame($universe, $address->getUniverseMagicByte());
     }

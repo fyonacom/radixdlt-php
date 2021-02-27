@@ -11,17 +11,17 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Techworker\RadixDLT\Types;
+namespace Techworker\RadixDLT\Types\Particles;
 
 use Techworker\RadixDLT\Serialization\Attributes\DsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\JsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\Serializer;
-use Techworker\RadixDLT\Types\Crypto\ECDSASignature;
-use Techworker\RadixDLT\Types\Particles\ParticleGroup;
+use Techworker\RadixDLT\Types\Primitives\Address;
+use Techworker\RadixDLT\Types\Primitives\Bytes;
 use Techworker\RadixDLT\Types\Primitives\UID;
 
-#[Serializer(name: 'radix.atom')]
-class Atom
+#[Serializer(name: 'radix.particles.message')]
+class Message extends Particle
 {
     public function __construct(
         #[JsonProperty]
@@ -29,13 +29,22 @@ class Atom
         protected UID $hid,
         #[JsonProperty]
         #[DsonProperty]
+        protected Bytes $bytes,
+        #[JsonProperty(arraySubType: UID::class)]
+        #[DsonProperty]
+        protected array $destinations,
+        #[JsonProperty]
+        #[DsonProperty]
+        protected Address $from,
+        #[JsonProperty]
+        #[DsonProperty]
+        protected Address $to,
+        #[JsonProperty]
+        #[DsonProperty]
         protected int $version,
-        #[JsonProperty(arraySubType: ParticleGroup::class)]
+        #[JsonProperty]
         #[DsonProperty]
-        protected array $particleGroups,
-        #[JsonProperty(arraySubType: ECDSASignature::class)]
-        #[DsonProperty]
-        protected array $signatures
+        protected int $nonce
     ) {
     }
 }

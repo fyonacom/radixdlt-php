@@ -13,24 +13,17 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Primitives;
 
-use CBOR\AbstractCBORObject;
-use CBOR\ByteStringObject;
-use Techworker\RadixDLT\Serialization\Interfaces\FromDsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\ToDsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
-use Techworker\RadixDLT\Serialization\Serializer;
-use Techworker\RadixDLT\Types\BytesBasedObject;
+use Techworker\RadixDLT\Serialization\Attributes\Dson;
+use Techworker\RadixDLT\Serialization\Attributes\Encoding;
+use Techworker\RadixDLT\Serialization\Attributes\JsonPrimitive;
+use Techworker\RadixDLT\Serialization\EncodingType;
+use Techworker\RadixDLT\Types\Primitive;
 
-/**
- * Class RRI
- * @package Techworker\RadixDLT\Types\Primitives
- */
-class RRI extends BytesBasedObject implements
-    FromJsonInterface,
-    ToJsonInterface,
-    FromDsonInterface,
-    ToDsonInterface
+
+#[Dson(majorType: 2, prefix: 6)]
+#[JsonPrimitive(prefix: ':rri:')]
+#[Encoding(encoding: EncodingType::STR)]
+class RRI extends Primitive
 {
     protected Address $address;
 
@@ -56,11 +49,6 @@ class RRI extends BytesBasedObject implements
         $this->symbol = $parts[1];
     }
 
-    public function __toString(): string
-    {
-        return $this->toBinary();
-    }
-
     public function getAddress(): Address
     {
         return $this->address;
@@ -75,32 +63,6 @@ class RRI extends BytesBasedObject implements
     {
         return self::fromBinary(
             sprintf('/%s/%s', (string) $address, $symbol)
-        );
-    }
-
-    public static function fromJson(array | string $json): static
-    {
-        return new static(binaryToBytes(
-            Serializer::primitiveFromJson($json, ':rri:')
-        ));
-    }
-
-    public function toJson(): string | array
-    {
-        return Serializer::primitiveToJson($this, ':rri:');
-    }
-
-    public static function fromDson(array | string | AbstractCBORObject $dson): static
-    {
-        return new static(
-            Serializer::primitiveFromDson($dson, 6)
-        );
-    }
-
-    public function toDson(): ByteStringObject
-    {
-        return new ByteStringObject(
-            Serializer::primitiveToDson($this->bytes, 6)
         );
     }
 }

@@ -13,12 +13,7 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Serialization\Interfaces;
 
-use CBOR\CBORObject;
-
-interface ToDsonInterface
+interface ToArrayInterface
 {
-    /**
-     * Tries to return a new CBOR representation of the implementing class.
-     */
-    public function toDson(): CBORObject;
+    public function toArray(): array;
 }

@@ -2,39 +2,69 @@
 namespace A;
 
 use BN\BN;
-use CBOR\ByteStringObject;
-use CBOR\Decoder;
-use CBOR\InfiniteMapObject;
-use CBOR\MapObject;
-use CBOR\OtherObject\OtherObjectManager;
-use CBOR\StringStream;
-use CBOR\Tag\PositiveBigIntegerTag;
-use CBOR\Tag\TagObjectManager;
-use CBOR\TextStringObject;
 use CBOR\UnsignedIntegerObject;
-use Techworker\RadixDLT\Types\Particles\SystemParticle;
-use Techworker\RadixDLT\Types\Primitives\UInt256;
-use Techworker\RadixDLT\Types\Universe\UniverseConfig;
+use Techworker\RadixDLT\Radix;
+use Techworker\RadixDLT\Serialization\ComplexSerializer;
 
 require_once 'vendor/autoload.php';
 
-$mo = new InfiniteMapObject();
-$mo->append(new TextStringObject('epoch'), UnsignedIntegerObject::create(1));
-$mo->append(new TextStringObject('serializer'), new TextStringObject('radix.particles.system_particle'));
-//$v = PositiveBigIntegerTag::create(new ByteStringObject();
-$mo->append(new TextStringObject('timestamp'), UnsignedIntegerObject::createObjectForValue(27, hexToString((new BN('1612357246596'))->toString(16, 8))));
-$mo->append(new TextStringObject('view'), UnsignedIntegerObject::create(1000));
-//print_r($mo);
-//exit;
-print_r(bytesToHex(binaryToBytes((string)$mo)));
+Radix::bootstrap();
+
+$data = [
+    'epoch' => 1,
+    'timestamp' => 1612357246596,
+    'view' => 1000,
+    'serializer' => 'radix.particles.system_particle'
+];
+
+$dson = 'bf6565706f6368016a73657269616c697a6572781f72616469782e7061727469636c65732e73797374656d5f7061727469636c656974696d657374616d701b0000017767fb1e8464766965771903e8ff';
+
+/** @var ComplexSerializer $serializer */
+$serializer = radix()->get(ComplexSerializer::class);
+print_r($serializer->fromJson($data));
+
 exit;
-//print_r(binaryToBytes((string)$mo));
 
-$stream = new StringStream(hexToString('bf6565706f6368016a73657269616c697a6572781f72616469782e7061727469636c65732e73797374656d5f7061727469636c656974696d657374616d701b0000017767fb1e8464766965771903e8ff'));
-$decoder = new Decoder(new TagObjectManager(), new OtherObjectManager());
-$decoded = $decoder->decode($stream);
-print_r($decoded);
+$number = 10;
+
+echo bytesToFormattedHex(binaryToBytes((string)UnsignedIntegerObject::create(10)));
+echo "\n";
+echo bytesToFormattedHex(binaryToBytes((string)UnsignedIntegerObject::create(128)));
+echo "\n";
+echo bytesToFormattedHex(binaryToBytes((string)UnsignedIntegerObject::create(256)));
+echo "\n";
+echo bytesToFormattedHex(binaryToBytes((string)UnsignedIntegerObject::create(500)));
+
+exit;
+$v = hexToString((string)(new BN((string)$data))->toString(16, 8));
+if ($v[0] === '-') {
+    $unsigned = true;
+}
+
+return UnsignedIntegerObject::createObjectForValue(27, $v);
 
 
-//bf6565706f6368016a73657269616c697a6572781f72616469782e7061727469636c65732e73797374656d5f7061727469636c656974696d657374616d701b0000017767fb1e8464766965771903e8ff
-//bf6565706f6368016a73657269616c697a6572781f72616469782e7061727469636c65732e73797374656d5f7061727469636c656974696d657374616d701b    017767fb1e8464766965771903e8ff
+
+$jsonConfig = json_decode(file_get_contents(__DIR__ . '/universe.json'), true);
+$config = \radix()->get(ComplexSerializer::class)->fromJson($jsonConfig);
+$backJson = $config->toJson();
+echo \radix()->get(ComplexSerializer::class)->toDson($config);
+
+print_r(array_diff_assoc_recursive($jsonConfig, $backJson));
+function array_diff_assoc_recursive($array1, $array2) {
+    $difference=array();
+    foreach($array1 as $key => $value) {
+        if( is_array($value) ) {
+            if( !isset($array2[$key]) || !is_array($array2[$key]) ) {
+                $difference[$key] = $value;
+            } else {
+                $new_diff = array_diff_assoc_recursive($value, $array2[$key]);
+                if( !empty($new_diff) )
+                    $difference[$key] = $new_diff;
+            }
+        } else if( !array_key_exists($key,$array2) || $array2[$key] !== $value ) {
+            $difference[$key] = $value;
+        }
+    }
+    return $difference;
+}

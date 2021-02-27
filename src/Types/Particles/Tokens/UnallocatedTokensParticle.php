@@ -13,19 +13,16 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles\Tokens;
 
-use BN\BN;
 use Techworker\RadixDLT\Serialization\Attributes\DsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\JsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\Serializer;
 use Techworker\RadixDLT\Types\Particles\Particle;
-use Techworker\RadixDLT\Types\Primitives\Address;
 use Techworker\RadixDLT\Types\Primitives\RRI;
-use Techworker\RadixDLT\Types\Primitives\String_;
 use Techworker\RadixDLT\Types\Primitives\UID;
 use Techworker\RadixDLT\Types\Primitives\UInt256;
 
-#[Serializer('radix.particles.mutable_supply_token_definition')]
-class MutableSupplyTokenDefinitionParticle extends Particle
+#[Serializer('radix.particles.unallocated_tokens')]
+class UnallocatedTokensParticle extends Particle
 {
     public function __construct(
         #[JsonProperty]
@@ -39,43 +36,19 @@ class MutableSupplyTokenDefinitionParticle extends Particle
         protected array $destinations,
         #[JsonProperty]
         #[DsonProperty]
-        protected RRI $rri,
-        #[JsonProperty]
-        #[DsonProperty]
-        protected String_ $name,
-        #[JsonProperty]
-        #[DsonProperty]
-        protected String_ $description,
+        protected UInt256 $amount,
         #[JsonProperty]
         #[DsonProperty]
         protected UInt256 $granularity,
         #[JsonProperty]
         #[DsonProperty]
-        protected String_ $iconUrl,
-        #[JsonProperty]
-        #[DsonProperty]
-        protected String_ $url,
-        #[JsonProperty]
-        #[DsonProperty]
         protected TokenPermission $permissions,
+        #[JsonProperty]
+        #[DsonProperty]
+        protected int $nonce,
+        #[JsonProperty]
+        #[DsonProperty]
+        protected RRI $tokenDefinitionReference,
     ) {
-        if ($granularity->getBn()->lt(new BN('0'))) {
-            throw new \InvalidArgumentException('Granularity has to be larger than 0');
-        }
-    }
-
-    public function getOwner(): Address
-    {
-        return $this->rri->getAddress();
-    }
-
-    public function getSymbol(): string
-    {
-        return $this->rri->getSymbol();
-    }
-
-    public function getAddresses(): array
-    {
-        return [$this->rri->getAddress()->getUID()];
     }
 }

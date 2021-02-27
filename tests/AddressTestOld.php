@@ -33,7 +33,7 @@ class AddressTestOld extends TestCase
         string $dson,
         int $universe
     ) {
-        Radix::setup();
+        Radix::bootstrap();
         $radixAddress = Address::fromBase58($base58);
         $this->assertRadixAddress(
             $radixAddress,

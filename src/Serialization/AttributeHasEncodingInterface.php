@@ -11,14 +11,14 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Techworker\RadixDLT\Serialization\Interfaces;
+namespace Techworker\RadixDLT\Serialization;
 
-use CBOR\CBORObject;
-
-interface ToDsonInterface
+/**
+ * Interface AttributeHasEncodingInterface
+ *
+ * A simple interface marker for attributes that hold encodings.
+ */
+interface AttributeHasEncodingInterface
 {
-    /**
-     * Tries to return a new CBOR representation of the implementing class.
-     */
-    public function toDson(): CBORObject;
+    public function getEncoding(): ?string;
 }

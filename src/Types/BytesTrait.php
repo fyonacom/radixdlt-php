@@ -13,23 +13,42 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types;
 
-use Stringable;
-
 /**
  * Class AbstractPrimitive
  *
  * Basic primitive with common utility functionality.
  * @psalm-consistent-constructor
  */
-abstract class BytesBasedObject implements Stringable
+trait BytesTrait
 {
+    private array $bytes;
+
+    public function countBytes()
+    {
+        return count($this->bytes);
+    }
+
     /**
-     * AbstractPrimitive constructor.
-     * @param int[] $bytes
+     * @return int[]
      */
-    protected function __construct(
-        protected array $bytes
-    ) {
+    public function slice(int $offset, int $length = null): array
+    {
+        return array_slice($this->bytes, $offset, $length);
+    }
+
+    public function at(int $index): int
+    {
+        return $this->bytes[$index];
+    }
+
+    public function exists(int $index): bool
+    {
+        return isset($this->bytes[$index]);
+    }
+
+    public function swap(int $index, int $to): void
+    {
+        $this->bytes[$index] = $to;
     }
 
     /**
@@ -159,5 +178,14 @@ abstract class BytesBasedObject implements Stringable
         }
 
         throw new \Exception('Invalid from encoding: ' . $enc);
+    }
+
+    /**
+     * AbstractPrimitive constructor.
+     * @param int[] $bytes
+     */
+    protected function initBytes(array $bytes): void
+    {
+        $this->bytes = $bytes;
     }
 }

@@ -13,30 +13,23 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Primitives;
 
-use CBOR\AbstractCBORObject;
-use CBOR\ByteStringObject;
 use InvalidArgumentException;
 use Techworker\RadixDLT\Crypto\Keys\Curves\Secp256k1;
 use Techworker\RadixDLT\Crypto\Keys\KeyPair;
 use Techworker\RadixDLT\Crypto\Keys\PrivateKey;
 use Techworker\RadixDLT\Crypto\Keys\PublicKey;
-use Techworker\RadixDLT\Serialization\Interfaces\FromDsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\ToDsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
-use Techworker\RadixDLT\Serialization\Serializer;
-use Techworker\RadixDLT\Types\BytesBasedObject;
+use Techworker\RadixDLT\Serialization\Attributes\Dson;
+use Techworker\RadixDLT\Serialization\Attributes\Encoding;
+use Techworker\RadixDLT\Serialization\Attributes\JsonPrimitive;
+use Techworker\RadixDLT\Serialization\EncodingType;
+use Techworker\RadixDLT\Types\Primitive;
 
-class Address extends BytesBasedObject implements
-    FromJsonInterface,
-    ToJsonInterface,
-    FromDsonInterface,
-    ToDsonInterface
+#[Dson(majorType: 2, prefix: 4)]
+#[JsonPrimitive(prefix: ':adr:')]
+#[Encoding(encoding: EncodingType::BASE58)]
+class Address extends Primitive
 {
-    /**
-     * @var int[]
-     */
-    protected array $hash;
+    protected Hash $hash;
 
     protected UID $uid;
 
@@ -44,10 +37,9 @@ class Address extends BytesBasedObject implements
 
     /**
      * Address constructor.
-     *
      * @param int[] $bytes
      */
-    protected function __construct(array $bytes, KeyPair $keyPair = null)
+    public function __construct(array $bytes, KeyPair $keyPair = null)
     {
         parent::__construct($bytes);
 
@@ -55,7 +47,7 @@ class Address extends BytesBasedObject implements
         // extract the public key and build a half empty keypair
         // with it.
         if ($keyPair === null) {
-            $publicKey = array_slice($this->bytes, 1, count($this->bytes) - 5);
+            $publicKey = $this->slice(1, $this->countBytes() - 5);
             $this->keyPair = radix()->keyService()->fromPublicKey($publicKey);
         } else {
             $this->keyPair = $keyPair;
@@ -63,19 +55,19 @@ class Address extends BytesBasedObject implements
 
         // validate the address
         $checksum = radixHash(
-            array_slice($this->bytes, 0, count($this->bytes) - 4),
+            $this->slice(0, $this->countBytes() - 4),
             0,
-            count($this->bytes) - 4
+            $this->countBytes() - 4
         );
 
         for ($i = 0; $i < 4; $i++) {
-            if (! isset($checksum[$i]) || $checksum[$i] !== $this->bytes[count($this->bytes) - 4 + $i]) {
+            if (! $checksum->exists($i) || $checksum->at($i) !== $this->at($this->countBytes() - 4 + $i)) {
                 throw new InvalidArgumentException('Invalid checksum for address');
             }
         }
 
-        $this->hash = radixHash($this->getPublicKey()->toBytes());
-        $this->uid = UID::fromBytes(array_slice($this->hash, 0, 16));
+        $this->hash = Hash::createHash($this->getPublicKey()->toBytes());
+        $this->uid = new UID($this->hash->slice(0, 16));
     }
 
     /**
@@ -118,7 +110,7 @@ class Address extends BytesBasedObject implements
 
         $check = radixHash($bytes, 0, count($publicKey) + 1);
         for ($i = 0; $i < 4; $i++) {
-            $bytes[count($publicKey) + 1 + $i] = $check[$i];
+            $bytes[count($publicKey) + 1 + $i] = $check->at($i);
         }
 
         return new self($bytes, $keyPair);
@@ -167,17 +159,15 @@ class Address extends BytesBasedObject implements
      */
     public function getUniverseMagicByte(): int
     {
-        return $this->bytes[0];
+        return $this->at(0);
     }
 
     /**
      * Gets the hash of the corresponding public key.
-     *
-     * @return int[]|string
      */
-    public function getHash(string $enc = null): array | string
+    public function getHash(): Hash
     {
-        return bytesToEnc($this->hash, $enc ?? 'hex');
+        return $this->hash;
     }
 
     /**
@@ -202,31 +192,5 @@ class Address extends BytesBasedObject implements
     public function getUID(): UID
     {
         return $this->uid;
-    }
-
-    public static function fromJson(array | string $json): static
-    {
-        return new static(base58ToBytes(
-            Serializer::primitiveFromJson($json, ':adr:')
-        ));
-    }
-
-    public function toJson(): string | array
-    {
-        return Serializer::primitiveToJson($this, ':adr:');
-    }
-
-    public static function fromDson(array | string | AbstractCBORObject $dson): static
-    {
-        return new static(
-            Serializer::primitiveFromDson($dson, 4)
-        );
-    }
-
-    public function toDson(): ByteStringObject
-    {
-        return new ByteStringObject(
-            Serializer::primitiveToDson($this->bytes, 4)
-        );
     }
 }

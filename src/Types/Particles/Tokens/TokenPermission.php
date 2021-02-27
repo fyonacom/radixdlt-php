@@ -13,9 +13,12 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles\Tokens;
 
+use Techworker\RadixDLT\Serialization\Attributes\DsonProperty;
+use Techworker\RadixDLT\Serialization\Attributes\JsonProperty;
+use Techworker\RadixDLT\Types\Particles\Particle;
 use Techworker\RadixDLT\Types\Primitives\String_;
 
-class TokenPermission
+class TokenPermission extends Particle
 {
     public const TOKEN_OWNER_ONLY = 'token_owner_only';
 
@@ -24,7 +27,11 @@ class TokenPermission
     public const NONE = 'none';
 
     public function __construct(
+        #[JsonProperty]
+        #[DsonProperty]
         protected String_ $mint,
+        #[JsonProperty]
+        #[DsonProperty]
         protected String_ $burn
     ) {
     }

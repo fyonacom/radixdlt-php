@@ -13,53 +13,33 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles;
 
+use Techworker\RadixDLT\Serialization\Attributes\DsonProperty;
+use Techworker\RadixDLT\Serialization\Attributes\JsonProperty;
+use Techworker\RadixDLT\Serialization\Attributes\Serializer;
+
 /**
  * Class RadixSpunParticle
  * @package Techworker\RadixDLT\Types\Particles
  */
+#[Serializer('radix.spun_particle')]
 class SpunParticle
 {
-    public const SERIALIZER = 'radix.spun_particle';
-
     public const SPIN_UP = 1;
 
     public const SPIN_NEUTRAL = 0;
 
     public const SPIN_DOWN = -1;
 
-    protected function __construct(
-        protected AbstractParticle $particle,
-        protected int $spin
+    public function __construct(
+        #[JsonProperty]
+        #[DsonProperty]
+        protected int $spin,
+        #[JsonProperty]
+        #[DsonProperty]
+        protected Particle $particle,
+        #[JsonProperty]
+        #[DsonProperty]
+        protected int $version
     ) {
-    }
-
-    public function up(AbstractParticle $particle): self
-    {
-        return new self($particle, self::SPIN_UP);
-    }
-
-    public function down(AbstractParticle $particle): self
-    {
-        return new self($particle, self::SPIN_DOWN);
-    }
-
-    public static function fromJson(array | string $json): self
-    {
-        if (is_string($json)) {
-            throw new \InvalidArgumentException('Invalid.');
-        }
-
-        /** @var AbstractParticle $particle */
-        $particle = AbstractParticle::fromJson((array) $json['particle']);
-        return new self($particle, (int) $json['spin']);
-    }
-
-    public function toJson(): array | string
-    {
-        $json = [];
-        $json['serializer'] = self::SERIALIZER;
-        $json['particle'] = $this->particle->toJson();
-        $json['spin'] = $this->spin;
-        return $json;
     }
 }

@@ -13,34 +13,33 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles;
 
+use Techworker\RadixDLT\Serialization\Attributes\Dson;
+use Techworker\RadixDLT\Serialization\Attributes\DsonProperty;
+use Techworker\RadixDLT\Serialization\Attributes\JsonProperty;
+use Techworker\RadixDLT\Serialization\Attributes\Serializer;
 use Techworker\RadixDLT\Types\Primitives\RRI;
+use Techworker\RadixDLT\Types\Primitives\UID;
 
-class RRIParticle extends AbstractParticle
+#[Dson(majorType: 5)]
+#[Serializer(name: 'radix.particles.rri')]
+class RRIParticle extends Particle
 {
-    protected function __construct(
-        protected RRI $rri
+    public function __construct(
+        #[JsonProperty]
+        #[DsonProperty]
+        protected UID $hid,
+        #[JsonProperty(arraySubType: UID::class)]
+        #[DsonProperty]
+        protected array $destinations,
+        #[JsonProperty]
+        #[DsonProperty]
+        protected RRI $rri,
+        #[JsonProperty]
+        #[DsonProperty]
+        protected int $nonce,
+        #[JsonProperty]
+        #[DsonProperty]
+        protected int $version
     ) {
-    }
-
-    public function getAddresses(): array
-    {
-        return [$this->rri];
-    }
-
-    public static function fromJson(array | string $json): self
-    {
-        if (is_string($json)) {
-            throw new \InvalidArgumentException('Invalid.');
-        }
-
-        $rri = RRI::fromJson((string) $json['rri']);
-        return new self($rri);
-    }
-
-    public function toJson(): array | string
-    {
-        $json = [];
-        $json['rri'] = $this->rri->toJson();
-        return $json;
     }
 }

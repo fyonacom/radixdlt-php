@@ -17,8 +17,21 @@ use Pimple\Psr11\Container as PimplePsrContainer;
 use Psr\Container\ContainerInterface;
 use Techworker\RadixDLT\Crypto\Keys\Adapters\OpenSSL;
 use Techworker\RadixDLT\Crypto\Keys\CurveResolver;
+use Techworker\RadixDLT\Serialization\ComplexSerializer;
+use Techworker\RadixDLT\Serialization\PrimitiveSerializer;
 use Techworker\RadixDLT\Services\KeyService;
 use Techworker\RadixDLT\Services\KeyServiceInterface;
+use Techworker\RadixDLT\Types\Atom;
+use Techworker\RadixDLT\Types\Crypto\ECDSASignature;
+use Techworker\RadixDLT\Types\Particles\Message;
+use Techworker\RadixDLT\Types\Particles\ParticleGroup;
+use Techworker\RadixDLT\Types\Particles\RRIParticle;
+use Techworker\RadixDLT\Types\Particles\SpunParticle;
+use Techworker\RadixDLT\Types\Particles\SystemParticle;
+use Techworker\RadixDLT\Types\Particles\Tokens\MutableSupplyTokenDefinitionParticle;
+use Techworker\RadixDLT\Types\Particles\Tokens\TransferrableTokensParticle;
+use Techworker\RadixDLT\Types\Particles\Tokens\UnallocatedTokensParticle;
+use Techworker\RadixDLT\Types\Universe\UniverseConfig;
 
 /**
  * Class Container
@@ -37,6 +50,16 @@ class Container implements ContainerInterface
         $pimpleContainer[CurveResolver::class] = fn (): CurveResolver => new CurveResolver(
             (array) radixConfig('crypto.keys.supported')
         );
+
+        $pimpleContainer[PrimitiveSerializer::class] = function (\Pimple\Container $container): PrimitiveSerializer {
+            return new PrimitiveSerializer();
+        };
+        $pimpleContainer[ComplexSerializer::class] = function (\Pimple\Container $container): ComplexSerializer {
+            return new ComplexSerializer(
+                $container[PrimitiveSerializer::class]
+            );
+        };
+
         $pimpleContainer[KeyServiceInterface::class] = function (\Pimple\Container $container): KeyService {
 
             /** @var CurveResolver $resolver */
@@ -55,6 +78,18 @@ class Container implements ContainerInterface
                 $resolver
             );
         };
+
+        $pimpleContainer['serialization.radix.universe'] = UniverseConfig::class;
+        $pimpleContainer['serialization.radix.atom'] = Atom::class;
+        $pimpleContainer['serialization.radix.particle_group'] = ParticleGroup::class;
+        $pimpleContainer['serialization.radix.spun_particle'] = SpunParticle::class;
+        $pimpleContainer['serialization.radix.particles.message'] = Message::class;
+        $pimpleContainer['serialization.radix.particles.rri'] = RRIParticle::class;
+        $pimpleContainer['serialization.radix.particles.mutable_supply_token_definition'] = MutableSupplyTokenDefinitionParticle::class;
+        $pimpleContainer['serialization.radix.particles.unallocated_tokens'] = UnallocatedTokensParticle::class;
+        $pimpleContainer['serialization.radix.particles.transferrable_tokens'] = TransferrableTokensParticle::class;
+        $pimpleContainer['serialization.crypto.ecdsa_signature'] = ECDSASignature::class;
+        $pimpleContainer['serialization.radix.particles.system_particle'] = SystemParticle::class;
 
         $this->innerContainer = new PimplePsrContainer($pimpleContainer);
     }

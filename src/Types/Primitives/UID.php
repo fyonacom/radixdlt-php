@@ -14,24 +14,20 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT\Types\Primitives;
 
 use BN\BN;
-use CBOR\AbstractCBORObject;
-use CBOR\ByteStringObject;
-use Techworker\RadixDLT\Serialization\Interfaces\FromDsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\ToDsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
-use Techworker\RadixDLT\Serialization\Serializer;
-use Techworker\RadixDLT\Types\BytesBasedObject;
+use Techworker\RadixDLT\Serialization\Attributes\Dson;
+use Techworker\RadixDLT\Serialization\Attributes\Encoding;
+use Techworker\RadixDLT\Serialization\Attributes\JsonPrimitive;
+use Techworker\RadixDLT\Serialization\EncodingType;
+use Techworker\RadixDLT\Types\Primitive;
 
 /**
  * Class EUID
  * @package Techworker\RadixDLT\Types\Primitives
  */
-class UID extends BytesBasedObject implements
-    FromJsonInterface,
-    ToJsonInterface,
-    FromDsonInterface,
-    ToDsonInterface
+#[Dson(majorType: 2, prefix: 2)]
+#[JsonPrimitive(prefix: ':uid:')]
+#[Encoding(encoding: EncodingType::HEX)]
+class UID extends Primitive
 {
     protected BN $shard;
 
@@ -46,13 +42,8 @@ class UID extends BytesBasedObject implements
         }
 
         parent::__construct($bytes);
-        $shard = array_slice($this->bytes, 0, 8);
+        $shard = $this->slice(0, 8);
         $this->shard = new BN(bytesToHex($shard), 16);
-    }
-
-    public function __toString(): string
-    {
-        return $this->toHex();
     }
 
     /**
@@ -61,31 +52,5 @@ class UID extends BytesBasedObject implements
     public function getShard(): BN
     {
         return $this->shard;
-    }
-
-    public static function fromJson(array | string $json): static
-    {
-        return new static(hexToBytes(
-            Serializer::primitiveFromJson($json, ':uid:')
-        ));
-    }
-
-    public function toJson(): string | array
-    {
-        return Serializer::primitiveToJson($this, ':uid:');
-    }
-
-    public static function fromDson(array | string | AbstractCBORObject $dson): static
-    {
-        return new static(
-            Serializer::primitiveFromDson($dson, 2)
-        );
-    }
-
-    public function toDson(): ByteStringObject
-    {
-        return new ByteStringObject(
-            Serializer::primitiveToDson($this->bytes, 2)
-        );
     }
 }

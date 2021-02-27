@@ -13,14 +13,24 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Crypto;
 
+use Techworker\RadixDLT\Serialization\Attributes\DsonProperty;
+use Techworker\RadixDLT\Serialization\Attributes\JsonProperty;
+use Techworker\RadixDLT\Serialization\Attributes\Serializer;
 use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
 use Techworker\RadixDLT\Types\Primitives\Bytes;
 
+#[Serializer(name: 'crypto.ecdsa_signature')]
 class ECDSASignature
 {
     public function __construct(
+        #[JsonProperty]
+        #[DsonProperty]
         protected Bytes $r,
+        #[JsonProperty]
+        #[DsonProperty]
         protected Bytes $s,
+        #[JsonProperty]
+        #[DsonProperty]
         protected int $version
     ) {
     }

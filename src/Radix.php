@@ -66,7 +66,7 @@ final class Radix implements ContainerInterface
      *
      * @return static
      */
-    public static function setup(
+    public static function bootstrap(
         ?ContainerInterface $outerContainer = null,
         ?ContainerInterface $innerContainer = null,
         array $config = []

@@ -14,24 +14,20 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT\Types\Primitives;
 
 use BN\BN;
-use CBOR\AbstractCBORObject;
-use CBOR\ByteStringObject;
-use Techworker\RadixDLT\Serialization\Interfaces\FromDsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\ToDsonInterface;
-use Techworker\RadixDLT\Serialization\Interfaces\ToJsonInterface;
-use Techworker\RadixDLT\Serialization\Serializer;
-use Techworker\RadixDLT\Types\BytesBasedObject;
+use Techworker\RadixDLT\Serialization\Attributes\Dson;
+use Techworker\RadixDLT\Serialization\Attributes\Encoding;
+use Techworker\RadixDLT\Serialization\Attributes\JsonPrimitive;
+use Techworker\RadixDLT\Serialization\EncodingType;
+use Techworker\RadixDLT\Types\Primitive;
 
 /**
  * Class UInt256
  * @package Techworker\RadixDLT\Types\Primitives
  */
-class UInt256 extends BytesBasedObject implements
-    FromJsonInterface,
-    ToJsonInterface,
-    FromDsonInterface,
-    ToDsonInterface
+#[Dson(majorType: 2, prefix: 5)]
+#[JsonPrimitive(prefix: ':u20:')]
+#[Encoding(encoding: EncodingType::UINT256)]
+class UInt256 extends Primitive
 {
     protected BN $bn;
 
@@ -55,44 +51,8 @@ class UInt256 extends BytesBasedObject implements
         return (string) $this->bn->toString();
     }
 
-    /**
-     * @param array|string $json
-     * @return static
-     * @throws \Exception
-     */
-    public static function fromJson(array | string $json): static
-    {
-        $bn = new BN(Serializer::primitiveFromJson($json, ':u20:'));
-        /** @var int[] $bytes */
-        $bytes = $bn->toArray('be', 32);
-        return new static($bytes);
-    }
-
-    /**
-     * @return string|array
-     * @throws \Exception
-     */
-    public function toJson(): string | array
-    {
-        return Serializer::primitiveToJson($this, ':u20:');
-    }
-
-    public function getBn(): BN
+    public function getBN(): BN
     {
         return $this->bn;
-    }
-
-    public static function fromDson(array | string | AbstractCBORObject $dson): static
-    {
-        return new static(
-            Serializer::primitiveFromDson($dson, 5)
-        );
-    }
-
-    public function toDson(): ByteStringObject
-    {
-        return new ByteStringObject(
-            Serializer::primitiveToDson($this->bytes, 5)
-        );
     }
 }

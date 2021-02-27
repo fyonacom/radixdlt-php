@@ -13,16 +13,24 @@ declare(strict_types=1);
 
 namespace Techworker\RadixDLT\Types\Particles;
 
+use Techworker\RadixDLT\Serialization\Attributes\DsonProperty;
+use Techworker\RadixDLT\Serialization\Attributes\JsonProperty;
+use Techworker\RadixDLT\Serialization\Attributes\Serializer;
+
+#[Serializer(name: 'radix.particle_group')]
 class ParticleGroup
 {
     /**
      * RadixParticleGroup constructor.
      * @param SpunParticle[] $particles
-     * @param array $metaData
      */
     public function __construct(
+        #[JsonProperty]
+        #[DsonProperty]
+        protected int $version,
+        #[JsonProperty]
+        #[DsonProperty]
         protected array $particles = [],
-        protected array $metaData = []
     ) {
     }
 }
