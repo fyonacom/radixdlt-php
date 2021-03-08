@@ -11,19 +11,18 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Techworker\RadixDLT\Types\Particles\Tokens;
+namespace Techworker\RadixDLT\Types\Particles;
 
 use Techworker\RadixDLT\Serialization\Attributes\DsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\JsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\Serializer;
-use Techworker\RadixDLT\Types\Particles\Particle;
+use Techworker\RadixDLT\Types\Primitives\Address;
+use Techworker\RadixDLT\Types\Primitives\Bytes;
 use Techworker\RadixDLT\Types\Primitives\Hash;
-use Techworker\RadixDLT\Types\Primitives\RRI;
 use Techworker\RadixDLT\Types\Primitives\UID;
-use Techworker\RadixDLT\Types\Primitives\UInt256;
 
-#[Serializer('radix.particles.unallocated_tokens')]
-class UnallocatedTokensParticle extends Particle
+#[Serializer(name: 'radix.particles.registered_validator')]
+class RegisteredValidator extends Particle
 {
     public function __construct(
         #[JsonProperty]
@@ -31,19 +30,10 @@ class UnallocatedTokensParticle extends Particle
         protected Hash $hid,
         #[JsonProperty]
         #[DsonProperty]
-        protected UInt256 $amount,
+        protected Address $address,
         #[JsonProperty]
         #[DsonProperty]
-        protected UInt256 $granularity,
-        #[JsonProperty]
-        #[DsonProperty]
-        protected TokenPermission $permissions,
-        #[JsonProperty]
-        #[DsonProperty]
-        protected int $nonce,
-        #[JsonProperty]
-        #[DsonProperty]
-        protected RRI $tokenDefinitionReference,
+        protected int $nonce
     ) {
     }
 }

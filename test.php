@@ -1,15 +1,39 @@
 <?php
 namespace A;
 
+use Amp\Http\Client\HttpException;
+use Amp\Http\Client\Response;
+use Amp\Loop;
 use BN\BN;
+use CBOR\Decoder;
+use CBOR\OtherObject\OtherObjectManager;
+use CBOR\StringStream;
+use CBOR\Tag\TagObjectManager;
 use CBOR\UnsignedIntegerObject;
 use Techworker\RadixDLT\Radix;
 use Techworker\RadixDLT\Serialization\ComplexSerializer;
+use Amp\Delayed;
+use Amp\Websocket;
+use Amp\Websocket\Client;
+use Amp\Http\Client\HttpClientBuilder;
+use Amp\Http\Client\Request;
 
 require_once 'vendor/autoload.php';
 
 Radix::bootstrap();
+$json = \radix()->connect('localhost')->api()->universe();
+$obj = \radix()->get(ComplexSerializer::class)->fromJson($json);
+echo 'TASKS WAITING: ' . \radix()->connect('localhost')->api()->tasksWaiting();
+echo 'WebSOCKETS: ' . \radix()->connect('localhost')->api()->websockets();
 
+/** @var ComplexSerializer $serializer */
+$serializer = radix()->get(ComplexSerializer::class);
+$net = \radix()->connect('localhost')->api()->network()['TCP'][0];
+print_r($serializer->fromJson($net));
+exit;
+//$serializer->fromJson(['TCP']);
+
+exit;
 $data = [
     'epoch' => 1,
     'timestamp' => 1612357246596,
@@ -21,7 +45,12 @@ $dson = 'bf6565706f6368016a73657269616c697a6572781f72616469782e7061727469636c657
 
 /** @var ComplexSerializer $serializer */
 $serializer = radix()->get(ComplexSerializer::class);
-print_r($serializer->fromJson($data));
+$obj = $serializer->fromJson($data);
+print_r($serializer->toDson($obj));
+
+$decoder = new Decoder(new TagObjectManager(), new OtherObjectManager());
+$res = $decoder->decode(new StringStream(hexToString($dson)));
+print_r($res);
 
 exit;
 

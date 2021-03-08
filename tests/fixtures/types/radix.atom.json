@@ -1,0 +1,301 @@
+[{
+  "hid": ":hsh:06f9b0078b5e724934e570c7237aaeeb54733d3ab09c8c1e1f1a7d3206d0302f",
+  "serializer": "radix.atom",
+  "message": ":str:Radix... just imagine!",
+  "particleGroups": [
+    {
+      "serializer": "radix.particle_group",
+      "particles": [
+        {
+          "spin": -1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "view": 0,
+            "hid": ":hsh:79ae7c3bedcbab89f0494727d232e0f1bd1aa87165fd20000d203966ff46f7aa",
+            "serializer": "radix.particles.system_particle",
+            "epoch": 0,
+            "timestamp": 0
+          }
+        },
+        {
+          "spin": 1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "view": 0,
+            "hid": ":hsh:2b5bbb9b6aee589c89c39be1d0a8ce699c5fe45ce0acc10dc4fb26ede028cb7e",
+            "serializer": "radix.particles.system_particle",
+            "epoch": 1,
+            "timestamp": 0
+          }
+        }
+      ]
+    },
+    {
+      "serializer": "radix.particle_group",
+      "particles": [
+        {
+          "spin": -1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "hid": ":hsh:6c110e38c0af75d3fc2efc5900edad655c73461b882bb78f64e1514caaedd7e7",
+            "rri": ":rri:/JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw/XRD",
+            "serializer": "radix.particles.rri",
+            "nonce": 0
+          }
+        },
+        {
+          "spin": 1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "hid": ":hsh:f159b59627dd42d69cf17bdf853ce6241f47bc376cfcf7e39974096247c35fc9",
+            "granularity": ":u20:1",
+            "permissions": {
+              "burn": ":str:all",
+              "mint": ":str:token_owner_only"
+            },
+            "rri": ":rri:/JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw/XRD",
+            "name": ":str:Rads",
+            "serializer": "radix.particles.mutable_supply_token_definition",
+            "description": ":str:Radix Native Tokens",
+            "iconUrl": ":str:https://assets.radixdlt.com/icons/icon-xrd-32x32.png",
+            "url": ":str:https://tokens.radixdlt.com/"
+          }
+        },
+        {
+          "spin": 1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "amount": ":u20:1000000000000000000000000000",
+            "hid": ":hsh:61edf5ff8fa226903157dbbf1219b6dead18ddaf2b0b7c4d2a28a1f301bc4bd0",
+            "address": ":adr:JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw",
+            "granularity": ":u20:1",
+            "permissions": {
+              "burn": ":str:all",
+              "mint": ":str:token_owner_only"
+            },
+            "serializer": "radix.particles.transferrable_tokens",
+            "nonce": 424350876253101,
+            "tokenDefinitionReference": ":rri:/JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw/XRD"
+          }
+        },
+        {
+          "spin": 1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "amount": ":u20:100000000000000000000000000",
+            "hid": ":hsh:2a111dd5852197310580da1a4db1db91c42f09554df96eeb11844f779f14ccc6",
+            "address": ":adr:JF5FTU5wdsKNp4qcuFJ1aD9enPQMocJLCqvHE2ZPDjUNag8MKun",
+            "granularity": ":u20:1",
+            "permissions": {
+              "burn": ":str:all",
+              "mint": ":str:token_owner_only"
+            },
+            "serializer": "radix.particles.transferrable_tokens",
+            "nonce": 424350877360744,
+            "tokenDefinitionReference": ":rri:/JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw/XRD"
+          }
+        },
+        {
+          "spin": 1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "amount": ":u20:100000000000000000000000000",
+            "hid": ":hsh:f9c0f92bcd32d9e94fb05d6e427428afb30612f4eac787cf9bec4481bda9b510",
+            "address": ":adr:JFeqmatdMyjxNce38w3pEfDeJ9CV6NCkygDt3kXtivHLsP3p846",
+            "granularity": ":u20:1",
+            "permissions": {
+              "burn": ":str:all",
+              "mint": ":str:token_owner_only"
+            },
+            "serializer": "radix.particles.transferrable_tokens",
+            "nonce": 424350877495425,
+            "tokenDefinitionReference": ":rri:/JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw/XRD"
+          }
+        },
+        {
+          "spin": 1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "amount": ":u20:100000000000000000000000000",
+            "hid": ":hsh:1245281b412bab2f687495a9c1ddd6c43ff8f7aba11041ae1474d397ceb6d69b",
+            "address": ":adr:JG3Ntbhj144hpz2ZooKsQG3Hq7UkCMwmFMwXfaYQgKFzNXAQvo5",
+            "granularity": ":u20:1",
+            "permissions": {
+              "burn": ":str:all",
+              "mint": ":str:token_owner_only"
+            },
+            "serializer": "radix.particles.transferrable_tokens",
+            "nonce": 424350877590042,
+            "tokenDefinitionReference": ":rri:/JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw/XRD"
+          }
+        },
+        {
+          "spin": 1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "amount": ":u20:100000000000000000000000000",
+            "hid": ":hsh:a61285606311ae7611e93fd72a8efbed7f32850c8fd974fa2cb7907a536308b8",
+            "address": ":adr:JFtJPDGvw4NDQyqCk7P5pWudNMeT8TFGCSvY9pTEqiyVhUGM9R9",
+            "granularity": ":u20:1",
+            "permissions": {
+              "burn": ":str:all",
+              "mint": ":str:token_owner_only"
+            },
+            "serializer": "radix.particles.transferrable_tokens",
+            "nonce": 424350877691526,
+            "tokenDefinitionReference": ":rri:/JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw/XRD"
+          }
+        },
+        {
+          "spin": 1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "amount": ":u20:100000000000000000000000000",
+            "hid": ":hsh:a09262917123f9f3b62177bb54b979279e881d39ee6bbbd48001ce34ebf6524f",
+            "address": ":adr:JEWaBeWxn9cju3i6SA5A41FWkBUn8hvRYHCtPh26rCRnumyVCfP",
+            "granularity": ":u20:1",
+            "permissions": {
+              "burn": ":str:all",
+              "mint": ":str:token_owner_only"
+            },
+            "serializer": "radix.particles.transferrable_tokens",
+            "nonce": 424350877782562,
+            "tokenDefinitionReference": ":rri:/JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw/XRD"
+          }
+        },
+        {
+          "spin": 1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "amount": ":u20:5000000000000000000000000",
+            "hid": ":hsh:bb0a4e3ce96bbe9c7b1f69331436f3178b0a88e3f17afda14479b756cea8d6db",
+            "address": ":adr:JFJh4tW1R4PF8U3A1L3tK1jjPCs9rkKGp1t1CFcDJaMYmJxeYVr",
+            "granularity": ":u20:1",
+            "permissions": {
+              "burn": ":str:all",
+              "mint": ":str:token_owner_only"
+            },
+            "serializer": "radix.particles.transferrable_tokens",
+            "nonce": 424350877892680,
+            "tokenDefinitionReference": ":rri:/JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw/XRD"
+          }
+        },
+        {
+          "spin": 1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "amount": ":u20:115792089237316195423570985008687907853269984665639059039457584007913129639935",
+            "hid": ":hsh:a7cd5ab8f1659309be4e6ce1e7564919f74c8e977f1ce07dea67983b949b55c1",
+            "granularity": ":u20:1",
+            "permissions": {
+              "burn": ":str:all",
+              "mint": ":str:token_owner_only"
+            },
+            "serializer": "radix.particles.unallocated_tokens",
+            "nonce": 424350877984448,
+            "tokenDefinitionReference": ":rri:/JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw/XRD"
+          }
+        }
+      ]
+    },
+    {
+      "serializer": "radix.particle_group",
+      "particles": [
+        {
+          "spin": -1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "hid": ":hsh:a0cb84e26e2eaec4df5b8591fe4d5151b27bc5ceba0e9d805f052084bc741f7a",
+            "address": ":adr:JHr64iDVsivW1Vtqaq5ikKZmRtSV9XKkfobaFpJnm4pcyrPG19A",
+            "serializer": "radix.particles.unregistered_validator",
+            "nonce": 0
+          }
+        },
+        {
+          "spin": 1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "hid": ":hsh:559bce052d565a0b90c3dbdfe87a65dc8040d0686e2764e89762483b62fe256c",
+            "address": ":adr:JHr64iDVsivW1Vtqaq5ikKZmRtSV9XKkfobaFpJnm4pcyrPG19A",
+            "serializer": "radix.particles.registered_validator",
+            "nonce": 1
+          }
+        }
+      ]
+    },
+    {
+      "serializer": "radix.particle_group",
+      "particles": [
+        {
+          "spin": -1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "amount": ":u20:5000000000000000000000000",
+            "hid": ":hsh:bb0a4e3ce96bbe9c7b1f69331436f3178b0a88e3f17afda14479b756cea8d6db",
+            "address": ":adr:JFJh4tW1R4PF8U3A1L3tK1jjPCs9rkKGp1t1CFcDJaMYmJxeYVr",
+            "granularity": ":u20:1",
+            "permissions": {
+              "burn": ":str:all",
+              "mint": ":str:token_owner_only"
+            },
+            "serializer": "radix.particles.transferrable_tokens",
+            "nonce": 424350877892680,
+            "tokenDefinitionReference": ":rri:/JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw/XRD"
+          }
+        },
+        {
+          "spin": 1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "amount": ":u20:5000000000000000000000000",
+            "hid": ":hsh:97c7d10c99bfc14cac84fdd0307a2af9e4c2c374827177ec0d7d7030f1ecb473",
+            "address": ":adr:JFJh4tW1R4PF8U3A1L3tK1jjPCs9rkKGp1t1CFcDJaMYmJxeYVr",
+            "granularity": ":u20:1",
+            "permissions": {
+              "burn": ":str:all",
+              "mint": ":str:token_owner_only"
+            },
+            "serializer": "radix.particles.staked_tokens",
+            "delegateAddress": ":adr:JHr64iDVsivW1Vtqaq5ikKZmRtSV9XKkfobaFpJnm4pcyrPG19A",
+            "nonce": 424350882346788,
+            "tokenDefinitionReference": ":rri:/JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw/XRD"
+          }
+        },
+        {
+          "spin": 1,
+          "serializer": "radix.spun_particle",
+          "particle": {
+            "amount": ":u20:0",
+            "hid": ":hsh:75449e9c6aba0e2b543c8848096c5a1d1a84714ef6b1a748b6d1878bb9ebc184",
+            "address": ":adr:JFJh4tW1R4PF8U3A1L3tK1jjPCs9rkKGp1t1CFcDJaMYmJxeYVr",
+            "granularity": ":u20:1",
+            "permissions": {
+              "burn": ":str:all",
+              "mint": ":str:token_owner_only"
+            },
+            "serializer": "radix.particles.transferrable_tokens",
+            "nonce": 424350882372623,
+            "tokenDefinitionReference": ":rri:/JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw/XRD"
+          }
+        }
+      ]
+    }
+  ],
+  "signatures": {
+    "23574391e44f6fc1accd062f0a850a12": {
+      "r": ":byt:KKE6P9floU9+kAcc9iqBBzfyvlx50hkuz+8aaKmba6c=",
+      "s": ":byt:Njj6RFiwhbXwxPVYSaa7P9YIj/+4KipoJTnE9zjgb3k=",
+      "serializer": "crypto.ecdsa_signature"
+    },
+    "e6d6787da7a549f48c2af70e9faa8d9e": {
+      "r": ":byt:GskHYP8VeTpc+HHt6OjgquSMJ4J0IokRgjetIeS7F9U=",
+      "s": ":byt:CzOFufZ1lZtddslW/otEavg7YMN1yzEEiLYjb9+ViAU=",
+      "serializer": "crypto.ecdsa_signature"
+    },
+    "6a96ee9ff84efdb09c9a358a68836644": {
+      "r": ":byt:mIZ275q9plvSrtAs/55Dz/6b5u0I8Zrvdl9kZAlv7sc=",
+      "s": ":byt:NsuP1MHEgMJq3lGG//7mexMKS3IBEghY09f6inh7/Kg=",
+      "serializer": "crypto.ecdsa_signature"
+    }
+  }
+}]

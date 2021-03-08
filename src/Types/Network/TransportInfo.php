@@ -11,29 +11,24 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Techworker\RadixDLT\Types;
+namespace Techworker\RadixDLT\Types\Network;
 
 use Techworker\RadixDLT\Serialization\Attributes\DsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\JsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\Serializer;
-use Techworker\RadixDLT\Types\Crypto\ECDSASignature;
-use Techworker\RadixDLT\Types\Particles\ParticleGroup;
 use Techworker\RadixDLT\Types\Primitives\Hash;
-use Techworker\RadixDLT\Types\Primitives\UID;
+use Techworker\RadixDLT\Types\Primitives\String_;
 
-#[Serializer(name: 'radix.atom')]
-class Atom
+#[Serializer(name: 'network.transport_info')]
+class TransportInfo
 {
     public function __construct(
+        #[JsonProperty(key: 'metadata')]
+        #[DsonProperty]
+        protected array $metaData,
         #[JsonProperty]
         #[DsonProperty]
-        protected Hash $hid,
-        #[JsonProperty(arraySubType: ParticleGroup::class)]
-        #[DsonProperty]
-        protected array $particleGroups,
-        #[JsonProperty(arraySubType: ECDSASignature::class)]
-        #[DsonProperty]
-        protected array $signatures
+        protected String_ $name
     ) {
     }
 }

@@ -27,9 +27,6 @@ class ParticleGroup
     public function __construct(
         #[JsonProperty]
         #[DsonProperty]
-        protected int $version,
-        #[JsonProperty]
-        #[DsonProperty]
         protected array $particles = [],
     ) {
     }

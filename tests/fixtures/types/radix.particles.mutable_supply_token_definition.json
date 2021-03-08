@@ -1,0 +1,14 @@
+[{
+  "hid": ":hsh:f159b59627dd42d69cf17bdf853ce6241f47bc376cfcf7e39974096247c35fc9",
+  "granularity": ":u20:1",
+  "permissions": {
+    "burn": ":str:all",
+    "mint": ":str:token_owner_only"
+  },
+  "rri": ":rri:/JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw/XRD",
+  "name": ":str:Rads",
+  "serializer": "radix.particles.mutable_supply_token_definition",
+  "description": ":str:Radix Native Tokens",
+  "iconUrl": ":str:https://assets.radixdlt.com/icons/icon-xrd-32x32.png",
+  "url": ":str:https://tokens.radixdlt.com/"
+}]

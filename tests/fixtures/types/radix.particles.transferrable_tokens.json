@@ -1,0 +1,13 @@
+[{
+  "amount": ":u20:1000000000000000000000000000",
+  "hid": ":hsh:61edf5ff8fa226903157dbbf1219b6dead18ddaf2b0b7c4d2a28a1f301bc4bd0",
+  "address": ":adr:JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw",
+  "granularity": ":u20:1",
+  "permissions": {
+    "burn": ":str:all",
+    "mint": ":str:token_owner_only"
+  },
+  "serializer": "radix.particles.transferrable_tokens",
+  "nonce": 424350876253101,
+  "tokenDefinitionReference": ":rri:/JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw/XRD"
+}]

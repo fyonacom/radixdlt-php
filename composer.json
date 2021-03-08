@@ -11,7 +11,12 @@
         "tuupola/base58": "^2.1",
         "spomky-labs/cbor-php": "^2.0",
         "psr/container": "^1.0",
-        "pimple/pimple": "^3.3"
+        "pimple/pimple": "^3.3",
+        "amphp/websocket-client": "^1.0",
+        "amphp/http-client": "^4.5",
+        "rmccue/requests": "^1.7",
+      "ext-curl": "*",
+        "symfony/http-client": "^5.2"
     },
     "autoload": {
         "psr-4": {

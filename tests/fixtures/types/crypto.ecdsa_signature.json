@@ -1,0 +1,16 @@
+[{
+    "r": ":byt:KKE6P9floU9+kAcc9iqBBzfyvlx50hkuz+8aaKmba6c=",
+    "s": ":byt:Njj6RFiwhbXwxPVYSaa7P9YIj/+4KipoJTnE9zjgb3k=",
+    "serializer": "crypto.ecdsa_signature"
+  },
+  {
+    "r": ":byt:GskHYP8VeTpc+HHt6OjgquSMJ4J0IokRgjetIeS7F9U=",
+    "s": ":byt:CzOFufZ1lZtddslW/otEavg7YMN1yzEEiLYjb9+ViAU=",
+    "serializer": "crypto.ecdsa_signature"
+  },
+  {
+    "r": ":byt:mIZ275q9plvSrtAs/55Dz/6b5u0I8Zrvdl9kZAlv7sc=",
+    "s": ":byt:NsuP1MHEgMJq3lGG//7mexMKS3IBEghY09f6inh7/Kg=",
+    "serializer": "crypto.ecdsa_signature"
+  }
+]

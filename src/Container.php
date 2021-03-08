@@ -23,14 +23,20 @@ use Techworker\RadixDLT\Services\KeyService;
 use Techworker\RadixDLT\Services\KeyServiceInterface;
 use Techworker\RadixDLT\Types\Atom;
 use Techworker\RadixDLT\Types\Crypto\ECDSASignature;
+use Techworker\RadixDLT\Types\Network\LocalSystem;
+use Techworker\RadixDLT\Types\Network\Peer;
+use Techworker\RadixDLT\Types\Network\TransportInfo;
 use Techworker\RadixDLT\Types\Particles\Message;
 use Techworker\RadixDLT\Types\Particles\ParticleGroup;
+use Techworker\RadixDLT\Types\Particles\RegisteredValidator;
 use Techworker\RadixDLT\Types\Particles\RRIParticle;
 use Techworker\RadixDLT\Types\Particles\SpunParticle;
+use Techworker\RadixDLT\Types\Particles\StakedTokens;
 use Techworker\RadixDLT\Types\Particles\SystemParticle;
 use Techworker\RadixDLT\Types\Particles\Tokens\MutableSupplyTokenDefinitionParticle;
 use Techworker\RadixDLT\Types\Particles\Tokens\TransferrableTokensParticle;
 use Techworker\RadixDLT\Types\Particles\Tokens\UnallocatedTokensParticle;
+use Techworker\RadixDLT\Types\Particles\UnregisteredValidator;
 use Techworker\RadixDLT\Types\Universe\UniverseConfig;
 
 /**
@@ -90,6 +96,12 @@ class Container implements ContainerInterface
         $pimpleContainer['serialization.radix.particles.transferrable_tokens'] = TransferrableTokensParticle::class;
         $pimpleContainer['serialization.crypto.ecdsa_signature'] = ECDSASignature::class;
         $pimpleContainer['serialization.radix.particles.system_particle'] = SystemParticle::class;
+        $pimpleContainer['serialization.radix.particles.unregistered_validator'] = UnregisteredValidator::class;
+        $pimpleContainer['serialization.radix.particles.registered_validator'] = RegisteredValidator::class;
+        $pimpleContainer['serialization.radix.particles.staked_tokens'] = StakedTokens::class;
+        $pimpleContainer['serialization.api.local_system'] = LocalSystem::class;
+        $pimpleContainer['serialization.network.peer'] = Peer::class;
+        $pimpleContainer['serialization.network.transport_info'] = TransportInfo::class;
 
         $this->innerContainer = new PimplePsrContainer($pimpleContainer);
     }

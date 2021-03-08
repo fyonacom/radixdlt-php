@@ -18,6 +18,13 @@ use Techworker\RadixDLT\Crypto\Keys\Adapters\SimplitoElliptic;
 use Techworker\RadixDLT\Crypto\Keys\Curves\Secp256k1;
 
 return [
+    'connections' => [
+        'localhost' => [
+            'ws' => 'ws://172.17.0.1:8080/rpc',
+            'rpc' => 'http://172.17.0.1:8080/rpc',
+            'api' => 'http://172.17.0.1:8080/api'
+        ]
+    ],
     'crypto' => [
         'keys' => [
             'supported' => [

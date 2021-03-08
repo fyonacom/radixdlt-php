@@ -19,6 +19,7 @@ use Techworker\RadixDLT\Serialization\Attributes\JsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\Serializer;
 use Techworker\RadixDLT\Types\Particles\Particle;
 use Techworker\RadixDLT\Types\Primitives\Address;
+use Techworker\RadixDLT\Types\Primitives\Hash;
 use Techworker\RadixDLT\Types\Primitives\RRI;
 use Techworker\RadixDLT\Types\Primitives\String_;
 use Techworker\RadixDLT\Types\Primitives\UID;
@@ -30,13 +31,7 @@ class MutableSupplyTokenDefinitionParticle extends Particle
     public function __construct(
         #[JsonProperty]
         #[DsonProperty]
-        protected int $version,
-        #[JsonProperty]
-        #[DsonProperty]
-        protected UID $hid,
-        #[JsonProperty(arraySubType: UID::class)]
-        #[DsonProperty]
-        protected array $destinations,
+        protected Hash $hid,
         #[JsonProperty]
         #[DsonProperty]
         protected RRI $rri,

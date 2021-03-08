@@ -20,7 +20,11 @@ RUN apk --update --no-cache add \
         su-exec \
         zlib-dev \
         libzip-dev \
-        icu-dev
+        icu-dev \
+        curl-dev
+
+# https://github.com/docker-library/php/issues/323
+RUN docker-php-ext-install curl
 
 # intl
 RUN docker-php-ext-configure intl
@@ -37,6 +41,7 @@ RUN docker-php-ext-install -j$(nproc) gmp
 
 RUN pecl install zip
 RUN docker-php-ext-enable zip
+
 
 ## install composer
 RUN curl -s https://getcomposer.org/installer > "/tmp/composer-setup.php" \

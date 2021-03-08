@@ -41,6 +41,11 @@ final class Radix implements ContainerInterface
     private ContainerInterface $innerContainer;
 
     /**
+     * @var Connection[]
+     */
+    protected array $connections;
+
+    /**
      * Radix constructor.
      * @param ContainerInterface|null $outerContainer
      */
@@ -121,11 +126,23 @@ final class Radix implements ContainerInterface
         return $this->get(KeyServiceInterface::class);
     }
 
+    public function connect(string $id) : Connection {
+        $config = radixConfig('connections', $id);
+        return $this->connectTo(
+            $id, $config['ws'] ?? null, $config['rpc'] ?? null, $config['api'] ?? null
+        );
+    }
+
+    public function connectTo(string $id, ?string $wsUri, ?string $rpcUri, ?string $apiUri) : Connection {
+        $this->connections[$id] = new Connection($wsUri, $rpcUri, $apiUri);
+        return $this->connections[$id];
+    }
+
     /**
      * TODO
      */
-    public function connection(): Connection
+    public function connection(string $id): Connection
     {
-        return new Connection();
+        return $this->connections[$id];
     }
 }

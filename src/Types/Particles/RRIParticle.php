@@ -17,6 +17,7 @@ use Techworker\RadixDLT\Serialization\Attributes\Dson;
 use Techworker\RadixDLT\Serialization\Attributes\DsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\JsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\Serializer;
+use Techworker\RadixDLT\Types\Primitives\Hash;
 use Techworker\RadixDLT\Types\Primitives\RRI;
 use Techworker\RadixDLT\Types\Primitives\UID;
 
@@ -27,19 +28,13 @@ class RRIParticle extends Particle
     public function __construct(
         #[JsonProperty]
         #[DsonProperty]
-        protected UID $hid,
-        #[JsonProperty(arraySubType: UID::class)]
-        #[DsonProperty]
-        protected array $destinations,
+        protected Hash $hid,
         #[JsonProperty]
         #[DsonProperty]
         protected RRI $rri,
         #[JsonProperty]
         #[DsonProperty]
-        protected int $nonce,
-        #[JsonProperty]
-        #[DsonProperty]
-        protected int $version
+        protected int $nonce
     ) {
     }
 }

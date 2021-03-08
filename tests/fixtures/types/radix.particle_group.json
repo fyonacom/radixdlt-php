@@ -1,0 +1,27 @@
+[{
+  "serializer": "radix.particle_group",
+  "particles": [
+    {
+      "spin": -1,
+      "serializer": "radix.spun_particle",
+      "particle": {
+        "view": 0,
+        "hid": ":hsh:79ae7c3bedcbab89f0494727d232e0f1bd1aa87165fd20000d203966ff46f7aa",
+        "serializer": "radix.particles.system_particle",
+        "epoch": 0,
+        "timestamp": 0
+      }
+    },
+    {
+      "spin": 1,
+      "serializer": "radix.spun_particle",
+      "particle": {
+        "view": 0,
+        "hid": ":hsh:2b5bbb9b6aee589c89c39be1d0a8ce699c5fe45ce0acc10dc4fb26ede028cb7e",
+        "serializer": "radix.particles.system_particle",
+        "epoch": 1,
+        "timestamp": 0
+      }
+    }
+  ]
+}]

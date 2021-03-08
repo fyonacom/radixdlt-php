@@ -21,6 +21,7 @@ use CBOR\InfiniteMapObject;
 use CBOR\MapItem;
 use CBOR\OtherObject\FalseObject;
 use CBOR\OtherObject\TrueObject;
+use CBOR\SignedIntegerObject;
 use CBOR\TextStringObject;
 use CBOR\UnsignedIntegerObject;
 use Techworker\RadixDLT\Serialization\Attributes\DsonProperty;
@@ -348,12 +349,20 @@ class ComplexSerializer
         if (is_string($input)) {
             return new TextStringObject($input);
         } elseif (is_int($input)) {
-            $v = hexToString((string) (new BN((string) $input))->toString(16, 8));
-            if ($v[0] === '-') {
-                $unsigned = true;
+            // TODO: check if this works, it does for > int32, never checked signed
+            if ($input >= 0) {
+                // check > 32bit, we have to trick here with the library
+                if($input > 4294967295) {
+                    $v = hexToString((string)(new BN((string)$input))->toString(16, 8));
+                    return UnsignedIntegerObject::createObjectForValue(27, $v);
+                }
+                return UnsignedIntegerObject::create($input);
             }
-
-            return UnsignedIntegerObject::createObjectForValue(27, $v);
+            if($input < -2147483648) {
+                $v = hexToString((string)(new BN((string)$input))->toString(16, 8));
+                return UnsignedIntegerObject::createObjectForValue(27, $v);
+            }
+            return SignedIntegerObject::create($input);
         } elseif (is_bool($input)) {
             if ($input === true) {
                 return new TrueObject();

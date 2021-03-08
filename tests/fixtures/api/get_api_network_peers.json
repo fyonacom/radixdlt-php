@@ -1,0 +1,26 @@
+[[
+  {
+    "system": {
+      "transports": [
+        {
+          "metadata": {
+            "port": ":str:30000",
+            "host": ":str:172.25.0.3"
+          },
+          "name": ":str:TCP",
+          "serializer": "network.transport_info"
+        }
+      ],
+      "agent": {
+        "protocol": 100,
+        "name": ":str:/Radix:/2710000",
+        "version": 2710000
+      },
+      "nid": ":uid:23574391e44f6fc1accd062f0a850a12",
+      "serializer": "api.local_system",
+      "key": ":str:2AEU7zBpynUyySQGE2K89HQbyvWQsWxFwc3FjouQfo6m9",
+      "timestamp": 0
+    },
+    "serializer": "network.peer"
+  }
+]]

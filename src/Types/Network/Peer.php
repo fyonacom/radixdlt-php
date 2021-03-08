@@ -11,24 +11,22 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Techworker\RadixDLT\Types\Crypto;
+namespace Techworker\RadixDLT\Types\Network;
 
 use Techworker\RadixDLT\Serialization\Attributes\DsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\JsonProperty;
-use Techworker\RadixDLT\Serialization\Attributes\Serializer;
-use Techworker\RadixDLT\Serialization\Interfaces\FromJsonInterface;
-use Techworker\RadixDLT\Types\Primitives\Bytes;
+use Techworker\RadixDLT\Types\Primitives\Hash;
 
-#[Serializer(name: 'crypto.ecdsa_signature')]
-class ECDSASignature
+#[Serializer(name: 'network.peer')]
+class Peer
 {
     public function __construct(
         #[JsonProperty]
         #[DsonProperty]
-        protected Bytes $r,
+        protected Hash $hid,
         #[JsonProperty]
         #[DsonProperty]
-        protected Bytes $s
+        protected array $system
     ) {
     }
 

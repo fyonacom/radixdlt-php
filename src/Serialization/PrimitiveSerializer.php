@@ -53,7 +53,7 @@ class PrimitiveSerializer
         // check prefix
         $prefix = substr($json, 0, strlen($jsonAttr->getPrefix()));
         if ($prefix !== $jsonAttr->getPrefix()) {
-            throw new \InvalidArgumentException('Json Prefix does not equal expected prefix: ' . $prefix);
+            throw new \InvalidArgumentException('Json Prefix does not equal expected prefix: ' . $prefix . ' -> ' . $json);
         }
 
         // strip the prefix from the value

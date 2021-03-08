@@ -1,0 +1,14 @@
+[{
+  "amount": ":u20:5000000000000000000000000",
+  "hid": ":hsh:97c7d10c99bfc14cac84fdd0307a2af9e4c2c374827177ec0d7d7030f1ecb473",
+  "address": ":adr:JFJh4tW1R4PF8U3A1L3tK1jjPCs9rkKGp1t1CFcDJaMYmJxeYVr",
+  "granularity": ":u20:1",
+  "permissions": {
+    "burn": ":str:all",
+    "mint": ":str:token_owner_only"
+  },
+  "serializer": "radix.particles.staked_tokens",
+  "delegateAddress": ":adr:JHr64iDVsivW1Vtqaq5ikKZmRtSV9XKkfobaFpJnm4pcyrPG19A",
+  "nonce": 424350882346788,
+  "tokenDefinitionReference": ":rri:/JFbHBw2BuhcwYLtP1QrbifSXky6bsoZN8rVmWFPrWayj92535mw/XRD"
+}]

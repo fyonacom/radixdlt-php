@@ -12,6 +12,7 @@ use Techworker\RadixDLT\Types\Primitives\Address;
 
 class RRIParticleTest extends TestCase
 {
+
     public const PARTICLE = [
         'rri' => '/23B6fH3FekJeP6e5guhZAk6n9z4fmTo5Tngo3a11Wg5R8gsWTV2x/COOKIE',
         'rri_json' => ':rri:/23B6fH3FekJeP6e5guhZAk6n9z4fmTo5Tngo3a11Wg5R8gsWTV2x/COOKIE',

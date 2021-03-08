@@ -37,9 +37,6 @@ class SpunParticle
         #[JsonProperty]
         #[DsonProperty]
         protected Particle $particle,
-        #[JsonProperty]
-        #[DsonProperty]
-        protected int $version
     ) {
     }
 }

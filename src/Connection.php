@@ -14,16 +14,25 @@ declare(strict_types=1);
 namespace Techworker\RadixDLT;
 
 // TODO!
+use Techworker\RadixDLT\Connection\Api;
+
 class Connection
 {
     protected int $universeMagicByte = 0;
 
-    public function __construct()
+    public function __construct(
+        protected ?string $wsUri,
+        protected ?string $rpcUri,
+        protected ?string $apiUri)
     {
     }
 
     public function getUniverseMagicByte(): int
     {
         return $this->universeMagicByte;
+    }
+
+    public function api() : Api {
+        return new Api($this, $this->apiUri);
     }
 }

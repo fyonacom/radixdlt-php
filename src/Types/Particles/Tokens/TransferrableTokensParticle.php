@@ -18,6 +18,7 @@ use Techworker\RadixDLT\Serialization\Attributes\JsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\Serializer;
 use Techworker\RadixDLT\Types\Particles\Particle;
 use Techworker\RadixDLT\Types\Primitives\Address;
+use Techworker\RadixDLT\Types\Primitives\Hash;
 use Techworker\RadixDLT\Types\Primitives\RRI;
 use Techworker\RadixDLT\Types\Primitives\UID;
 use Techworker\RadixDLT\Types\Primitives\UInt256;
@@ -31,7 +32,7 @@ class TransferrableTokensParticle extends Particle
         protected UInt256 $amount,
         #[JsonProperty]
         #[DsonProperty]
-        protected UID $hid,
+        protected Hash $hid,
         #[JsonProperty]
         #[DsonProperty]
         protected Address $address,
@@ -41,12 +42,6 @@ class TransferrableTokensParticle extends Particle
         #[JsonProperty]
         #[DsonProperty]
         protected TokenPermission $permissions,
-        #[JsonProperty(arraySubType: UID::class)]
-        #[DsonProperty]
-        protected array $destinations,
-        #[JsonProperty]
-        #[DsonProperty]
-        protected int $version,
         #[JsonProperty]
         #[DsonProperty]
         protected int $nonce,

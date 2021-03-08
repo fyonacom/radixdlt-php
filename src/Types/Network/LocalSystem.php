@@ -11,63 +11,61 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Techworker\RadixDLT\Types\Universe;
+namespace Techworker\RadixDLT\Types\Network;
 
 use Techworker\RadixDLT\Serialization\Attributes\DsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\JsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\Serializer;
-use Techworker\RadixDLT\Types\Complex;
-use Techworker\RadixDLT\Types\Primitives\Bytes;
 use Techworker\RadixDLT\Types\Primitives\Hash;
 use Techworker\RadixDLT\Types\Primitives\String_;
-use Techworker\RadixDLT\Types\Primitives\UID;
+use Techworker\RadixDLT\Types\Primitives\UInt256;
 
-#[Serializer(name: 'radix.universe')]
-class UniverseConfig extends Complex
+#[Serializer(name: 'api.local_system')]
+class LocalSystem
 {
-    public const TYPE_PRODUCTION = 0;
-
-    public const TYPE_TEST = 1;
-
-    public const TYPE_DEVELOPMENT = 2;
-
-    private int $magicByte;
-
     public function __construct(
+        #[JsonProperty(arraySubType: TransportInfo::class)]
+        #[DsonProperty]
+        protected array $transports,
         #[JsonProperty]
         #[DsonProperty]
-        protected int $magic,
-        #[JsonProperty]
-        #[DsonProperty]
-        protected Bytes $creator,
+        protected Agent $agent,
         #[JsonProperty]
         #[DsonProperty]
         protected Hash $hid,
         #[JsonProperty]
         #[DsonProperty]
-        protected int $port,
-        #[JsonProperty('signature.s')]
-        #[DsonProperty]
-        protected Bytes $signatureR,
-        #[JsonProperty('signature.r')]
-        #[DsonProperty]
-        protected Bytes $signatureS,
+        protected UInt256 $nid,
         #[JsonProperty]
         #[DsonProperty]
-        protected String_ $name,
+        protected int $processors,
         #[JsonProperty]
         #[DsonProperty]
-        protected String_ $description,
-        #[JsonProperty]
-        #[DsonProperty]
-        protected int $type,
+        protected String_ $key,
         #[JsonProperty]
         #[DsonProperty]
         protected int $timestamp,
         #[JsonProperty]
         #[DsonProperty]
-        protected array $genesis
+        protected array $info
     ) {
-        $this->magicByte = $this->magic & 0xff;
+    }
+
+    public static function fromJson(array | string $json): FromJsonInterface
+    {
+        $data = [];
+        $data['r'] = Bytes::fromJson((string) $json['r']);
+        $data['s'] = Bytes::fromJson((string) $json['s']);
+        $data['version'] = (int) $json['version'];
+        return new self(...$data);
+    }
+
+    public function toJson(): array | string
+    {
+        $json = [];
+        $json['r'] = $this->r->toJson();
+        $json['s'] = $this->s->toJson();
+        $json['version'] = $this->version;
+        return $json;
     }
 }

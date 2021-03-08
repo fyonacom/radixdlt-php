@@ -11,39 +11,26 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Techworker\RadixDLT\Types\Particles\Tokens;
+namespace Techworker\RadixDLT\Types\Network;
 
 use Techworker\RadixDLT\Serialization\Attributes\DsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\JsonProperty;
 use Techworker\RadixDLT\Serialization\Attributes\Serializer;
-use Techworker\RadixDLT\Types\Particles\Particle;
 use Techworker\RadixDLT\Types\Primitives\Hash;
-use Techworker\RadixDLT\Types\Primitives\RRI;
-use Techworker\RadixDLT\Types\Primitives\UID;
-use Techworker\RadixDLT\Types\Primitives\UInt256;
+use Techworker\RadixDLT\Types\Primitives\String_;
 
-#[Serializer('radix.particles.unallocated_tokens')]
-class UnallocatedTokensParticle extends Particle
+class Agent
 {
     public function __construct(
         #[JsonProperty]
         #[DsonProperty]
-        protected Hash $hid,
+        protected int $protocol,
         #[JsonProperty]
         #[DsonProperty]
-        protected UInt256 $amount,
+        protected int $version,
         #[JsonProperty]
         #[DsonProperty]
-        protected UInt256 $granularity,
-        #[JsonProperty]
-        #[DsonProperty]
-        protected TokenPermission $permissions,
-        #[JsonProperty]
-        #[DsonProperty]
-        protected int $nonce,
-        #[JsonProperty]
-        #[DsonProperty]
-        protected RRI $tokenDefinitionReference,
+        protected String_ $name
     ) {
     }
 }

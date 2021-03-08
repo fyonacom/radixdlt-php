@@ -1,0 +1,204 @@
+[{
+  "hid": ":hsh:222f898f234e0f5adeb5b00b918d2b88c7a1b4b9dc0e062ffbd0a1d3c3c449b1",
+  "system": {
+    "transports": [
+      {
+        "metadata": {
+          "port": ":str:30000",
+          "host": ":str:172.25.0.3"
+        },
+        "name": ":str:TCP",
+        "serializer": "network.transport_info"
+      }
+    ],
+    "agent": {
+      "protocol": 100,
+      "name": ":str:/Radix:/2710000",
+      "version": 2710000
+    },
+    "hid": ":hsh:e0ae5f6afc595114f62aedabe8ce67e2a3c28b8a247b014d7e22b567b61b60b6",
+    "nid": ":uid:23574391e44f6fc1accd062f0a850a12",
+    "serializer": "api.local_system",
+    "processors": 4,
+    "key": ":str:2AEU7zBpynUyySQGE2K89HQbyvWQsWxFwc3FjouQfo6m9",
+    "timestamp": 0,
+    "info": {
+      "counters": {
+        "ledger": {
+          "processed": 15733,
+          "state_version": 15733,
+          "bft_commands_processed": 15733,
+          "sync_commands_processed": 0
+        },
+        "mempool": {
+          "maxcount": 1000,
+          "count": 0,
+          "failure_count": 0
+        },
+        "count": {
+          "bdb": {
+            "ledger": {
+              "contains_tx": 188800,
+              "deletes": 0,
+              "save_tx": 15733,
+              "commit": 0,
+              "save": 15741,
+              "last_vertex": 1,
+              "store": 15734,
+              "create_tx": 15733,
+              "contains": 0,
+              "entries": 1,
+              "get_last": 0,
+              "get_next": 5,
+              "search": 5,
+              "total": 251762,
+              "get_prev": 0,
+              "bytes": {
+                "read": 202047243,
+                "write": 236967421
+              },
+              "get": 7,
+              "last_committed": 2,
+              "get_first": 0
+            },
+            "address_book": {
+              "deletes": 0,
+              "total": 2,
+              "bytes": {
+                "read": 0,
+                "write": 348
+              }
+            },
+            "safety_state": {
+              "total": 15738,
+              "bytes": {
+                "read": 40885866,
+                "write": 42923662
+              }
+            }
+          }
+        },
+        "epoch_manager": {
+          "queued_consensus_events": 0
+        },
+        "hashed": {
+          "bytes": 126658357
+        },
+        "networking": {
+          "received_bytes": 2217,
+          "tcp": {
+            "dropped_messages": 0,
+            "closed": 0,
+            "opened": 1
+          },
+          "udp": {
+            "dropped_messages": 0
+          },
+          "sent_bytes": 2217
+        },
+        "sync": {
+          "processed": 0,
+          "target_state_version": 0,
+          "invalid_commands_received": 0,
+          "last_read_millis": 0,
+          "target_current_diff": 0
+        },
+        "signatures": {
+          "verified": 31475,
+          "signed": 31480
+        },
+        "elapsed": {
+          "bdb": {
+            "ledger": {
+              "contains_tx": 1621335,
+              "save_tx": 3173932,
+              "commit": 0,
+              "save": 3939954,
+              "last_vertex": 137,
+              "store": 3704099,
+              "create_tx": 64887,
+              "contains": 0,
+              "entries": 772,
+              "get_last": 0,
+              "get_next": 2916,
+              "search": 7155,
+              "total": 12528680,
+              "get_prev": 0,
+              "get": 11400,
+              "last_committed": 2086,
+              "get_first": 0
+            },
+            "address_book": 26287,
+            "safety_state": 1989493
+          }
+        },
+        "bft": {
+          "state_version": 15733,
+          "vote_quorums": 15737,
+          "rejected": 0,
+          "vertex_store_rebuilds": 0,
+          "vertex_store_forks": 0,
+          "sync": {
+            "request_timeouts": 0,
+            "requests_sent": 0
+          },
+          "timeout": 0,
+          "vertex_store_size": 2,
+          "processed": 15733,
+          "consensus_events": 31475,
+          "indirect_parent": 0,
+          "proposals_made": 15738,
+          "timed_out_views": 0,
+          "timeout_quorums": 0
+        },
+        "messages": {
+          "inbound": {
+            "processed": 0,
+            "discarded": 0,
+            "badsignature": 0,
+            "received": 5
+          },
+          "outbound": {
+            "processed": 5,
+            "aborted": 0,
+            "pending": 0,
+            "sent": 5
+          }
+        },
+        "persistence": {
+          "safety_store_saves": 15737,
+          "vertex_store_saves": 15742,
+          "atom_log": {
+            "write_bytes": 28698833,
+            "write_compressed": 15966438
+          }
+        },
+        "time": {
+          "duration": 52887,
+          "since": ":str:2021-03-07T08:46:35.511Z"
+        }
+      },
+      "system_version": {
+        "system_version": {
+          "agent_version": 2710000,
+          "protocol_version": 100,
+          "display": ":str:HEAD-8e6e086",
+          "commit": ":str:8e6e0868088a5ef8684ec5d30f29c6d8af3a3fba",
+          "branch": ":str:HEAD"
+        }
+      },
+      "epochManager": {
+        "highQC": {
+          "view": 5735,
+          "vertexId": ":hsh:0186ee59dfad7e9c1692bed0769e020b1267735c6270ebbfca9c968f852f091f",
+          "epoch": 2
+        },
+        "currentView": {
+          "view": 5736,
+          "epoch": 2
+        }
+      }
+    }
+  },
+  "serializer": "network.peer"
+}]

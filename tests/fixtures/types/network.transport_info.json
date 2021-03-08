@@ -1,0 +1,8 @@
+[{
+  "metadata": {
+    "port": ":str:30000",
+    "host": ":str:172.25.0.3"
+  },
+  "name": ":str:TCP",
+  "serializer": "network.transport_info"
+}]

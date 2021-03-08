@@ -1,0 +1,17 @@
+[{
+  "23574391e44f6fc1accd062f0a850a12": {
+    "r": ":byt:KKE6P9floU9+kAcc9iqBBzfyvlx50hkuz+8aaKmba6c=",
+    "s": ":byt:Njj6RFiwhbXwxPVYSaa7P9YIj/+4KipoJTnE9zjgb3k=",
+    "serializer": "crypto.ecdsa_signature"
+  },
+  "e6d6787da7a549f48c2af70e9faa8d9e": {
+    "r": ":byt:GskHYP8VeTpc+HHt6OjgquSMJ4J0IokRgjetIeS7F9U=",
+    "s": ":byt:CzOFufZ1lZtddslW/otEavg7YMN1yzEEiLYjb9+ViAU=",
+    "serializer": "crypto.ecdsa_signature"
+  },
+  "6a96ee9ff84efdb09c9a358a68836644": {
+    "r": ":byt:mIZ275q9plvSrtAs/55Dz/6b5u0I8Zrvdl9kZAlv7sc=",
+    "s": ":byt:NsuP1MHEgMJq3lGG//7mexMKS3IBEghY09f6inh7/Kg=",
+    "serializer": "crypto.ecdsa_signature"
+  }
+}]
